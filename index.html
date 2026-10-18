@@ -106,7 +106,7 @@
             margin-left: 4px;
         }
 
-        /* Gimmick-Leiste */
+        /* Gimmicks */
         .gimmick-bar {
             display: flex;
             gap: 8px;
@@ -181,7 +181,6 @@
             margin: 0;
         }
 
-        /* Autocomplete Suchergebnisse Popover */
         .search-results-popup {
             position: absolute;
             top: 100%;
@@ -276,7 +275,7 @@
             color: white;
         }
 
-        /* Suchleiste für gespeicherte Filme */
+        /* Suchleiste */
         .filter-row {
             display: flex;
             gap: 8px;
@@ -298,7 +297,7 @@
             background-position: 12px center;
         }
 
-        /* Karten */
+        /* Karten mit detaillierter Ansicht */
         .grid {
             display: flex;
             flex-direction: column;
@@ -308,20 +307,25 @@
         .card {
             background-color: var(--surface-card);
             border-radius: 14px;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid var(--border-color);
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-header-line {
+            display: flex;
+            align-items: flex-start;
             justify-content: space-between;
             gap: 12px;
         }
 
-        .card-left {
+        .card-main-info {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
             overflow: hidden;
-            cursor: pointer;
             flex: 1;
         }
 
@@ -330,6 +334,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            margin-top: 4px;
         }
 
         .checkbox-container input { display: none; }
@@ -357,10 +362,9 @@
             font-weight: bold;
         }
 
-        /* Vorschau / Poster */
         .card-poster-img {
-            width: 48px;
-            height: 68px;
+            width: 52px;
+            height: 74px;
             border-radius: 6px;
             object-fit: cover;
             background-color: #262c36;
@@ -368,28 +372,48 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
         }
 
-        .card-info h4 {
-            margin: 0 0 4px 0;
-            font-size: 0.95rem;
+        .card-text-details h4 {
+            margin: 0 0 2px 0;
+            font-size: 1rem;
             color: var(--text-color);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.25;
         }
 
-        .card-info p {
-            margin: 0;
+        .card-meta {
             font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .card-actors {
+            font-size: 0.82rem;
             color: var(--text-secondary);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-overview {
+            font-size: 0.82rem;
+            color: #c9d1d9;
+            margin-top: 4px;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .card-actions {
             display: flex;
             align-items: center;
             gap: 2px;
+            flex-shrink: 0;
         }
 
         .action-icon-btn {
@@ -403,7 +427,7 @@
         }
         .action-icon-btn:hover { color: var(--text-color); background-color: rgba(255,255,255,0.05); }
 
-        /* Modal für Info, manuellen Eintrag & Bearbeiten */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -430,7 +454,7 @@
             overflow-y: auto;
         }
 
-        .modal-content input, .modal-content select {
+        .modal-content input, .modal-content select, .modal-content textarea {
             width: 100%;
             padding: 10px;
             border-radius: 8px;
@@ -439,6 +463,7 @@
             color: var(--text-color);
             box-sizing: border-box;
             outline: none;
+            font-family: inherit;
         }
 
         .modal-buttons {
@@ -482,15 +507,14 @@
             </div>
         </div>
 
-        <!-- Neuen Film suchen & automatisch Hinzufügen -->
+        <!-- Suchen & Hinzufügen -->
         <div class="add-card">
             <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
             <div class="input-wrapper">
                 <span class="input-icon">🎬</span>
-                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Inception...)" oninput="searchOnlineMovies(this.value)" onkeydown="if(event.key === 'Enter') quickAddCustom()">
+                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Tatort...)" oninput="searchOnlineMovies(this.value)" onkeydown="if(event.key === 'Enter') quickAddCustom()">
             </div>
-            <p class="add-hint">Tippe den Namen ein, um Plakate, Handlung & Schauspieler automatisch zu laden.</p>
-            
+            <p class="add-hint">Tippe den Namen ein, um Plakate, Handlung & Schauspieler zu laden.</p>
             <div id="searchResultsPopup" class="search-results-popup"></div>
         </div>
 
@@ -510,49 +534,25 @@
             </button>
         </div>
 
-        <!-- Suchleiste für gespeicherte Filme (In BEIDEN Tabs) -->
+        <!-- Suchleiste (Sucht nach Titeln, Schauspielern & Genre) -->
         <div class="filter-row">
-            <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen..." onkeyup="renderList()">
+            <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen (Titel, Darsteller...)..." onkeyup="renderList()">
         </div>
 
         <!-- Medien Liste -->
         <div id="mediaGrid" class="grid"></div>
     </div>
 
-    <!-- Modal für Filminfos (Handlung & Schauspieler) -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; gap: 14px; align-items: flex-start;">
-                <img id="infoPoster" src="" style="width: 80px; height: 115px; border-radius: 8px; object-fit: cover; background-color: #262c36;" alt="Poster">
-                <div>
-                    <h3 id="infoTitle" style="margin: 0 0 6px 0; font-size: 1.1rem; color: var(--text-color);"></h3>
-                    <p id="infoMeta" style="margin: 0 0 6px 0; font-size: 0.85rem; color: var(--primary-color);"></p>
-                </div>
-            </div>
-            <div>
-                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Handlung</h4>
-                <p id="infoOverview" style="margin: 0; font-size: 0.88rem; line-height: 1.4; color: var(--text-color);"></p>
-            </div>
-            <div>
-                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Hauptdarsteller</h4>
-                <p id="infoCast" style="margin: 0; font-size: 0.88rem; color: var(--text-color);"></p>
-            </div>
-            <div class="modal-buttons" style="margin-top: 15px;">
-                <button class="btn-save" onclick="closeInfoModal()" style="width: 100%;">Schließen</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal für manuellen Eintrag & Bearbeiten -->
+    <!-- Modal zum Bearbeiten & Hinzufügen -->
     <div id="addModal" class="modal">
         <div class="modal-content">
             <h3 id="modalTitleText" style="margin: 0;">Neuen Eintrag hinzufügen</h3>
             <input type="hidden" id="editId">
             <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: Münster...)">
-            <input type="text" id="newGenre" placeholder="Genre / Ermittler (z.B. Krimi, Thiel & Boerne)">
+            <input type="text" id="newGenre" placeholder="Genre (z.B. Krimi / Komödie)">
             <input type="text" id="newYear" placeholder="Jahr (z.B. 2026)">
-            <input type="text" id="newOverview" placeholder="Handlung / Beschreibung (optional)">
-            <input type="text" id="newCast" placeholder="Schauspieler (optional)">
+            <input type="text" id="newCast" placeholder="Schauspieler / Ermittler (z.B. Axel Prahl, Jan Josef Liefers)">
+            <textarea id="newOverview" rows="3" placeholder="Handlung / Beschreibung"></textarea>
             <input type="text" id="newPoster" placeholder="Bild-URL / Poster-Link (optional)">
             <select id="newTab">
                 <option value="watchlist">Möchte ich sehen</option>
@@ -571,9 +571,39 @@
         const TMDB_API_KEY = '15d2ea6d0dc1d476efb279268b376468';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
-            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi, Drama", tab: "watchlist", poster: "https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", overview: "Ein Team von Entforschern unternimmt eine Reise durch ein Wurmloch im Weltraum, um die Überlebenssicherung der Menschheit zu garantieren.", cast: "Matthew McConaughey, Anne Hathaway, Jessica Chastain", selected: false },
-            { id: 2, title: "Tatort: Münster - Schwanensee", year: "2024", genre: "Krimi", tab: "watchlist", poster: "🕵️‍♂️", overview: "Ein spannender Fall für Thiel und Boerne in Münster.", cast: "Axel Prahl, Jan Josef Liefers", selected: false },
-            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi, Thriller", tab: "watched", poster: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", overview: "Dom Cobb ist ein geschickter Dieb, der in Träume eindringt, um Geheimnisse zu stehlen.", cast: "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page", selected: false }
+            { 
+                id: 1, 
+                title: "Interstellar", 
+                year: "2014", 
+                genre: "Sci-Fi / Drama", 
+                tab: "watchlist", 
+                poster: "https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", 
+                cast: "Matthew McConaughey, Anne Hathaway, Jessica Chastain",
+                overview: "Ein Team von Forschern reist durch ein Wurmloch im Weltraum, um das Überleben der Menschheit auf einem neuen Planeten zu sichern.",
+                selected: false 
+            },
+            { 
+                id: 2, 
+                title: "Tatort: Münster - Schwanensee", 
+                year: "2024", 
+                genre: "Krimi / Komödie", 
+                tab: "watchlist", 
+                poster: "🕵️‍♂️", 
+                cast: "Thiel & Boerne (Axel Prahl, Jan Josef Liefers)",
+                overview: "In einer Psychiatrie am Schwanensee wird eine Leiche am Beckenboden gefunden. Frank Thiel und Prof. Boerne ermitteln.",
+                selected: false 
+            },
+            { 
+                id: 3, 
+                title: "Inception", 
+                year: "2010", 
+                genre: "Sci-Fi / Thriller", 
+                tab: "watched", 
+                poster: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", 
+                cast: "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page",
+                overview: "Ein Dieb, der Geheimnisse aus den Träumen von Menschen stiehlt, erhält die Chance auf eine saubere Weste, wenn er eine Idee einpflanzt.",
+                selected: false 
+            }
         ];
 
         function saveData() {
@@ -608,7 +638,7 @@
                                 const year = releaseDate ? releaseDate.split('-')[0] : 'k.A.';
                                 const poster = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : '🎬';
                                 const mediaType = item.media_type === 'tv' ? 'Serie' : 'Film';
-                                const overview = item.overview || 'Keine Beschreibung verfügbar.';
+                                const overview = item.overview || 'Keine Beschreibung vorhanden.';
                                 const id = item.id;
                                 const endpoint = item.media_type === 'tv' ? 'tv' : 'movie';
 
@@ -638,16 +668,15 @@
             }, 300);
         }
 
-        // Lädt zusätzlich die Schauspieler (Credits) von der API
         function fetchMovieDetails(endpoint, id, title, year, genre, poster, overview) {
             fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/credits?api_key=${TMDB_API_KEY}&language=de-DE`)
                 .then(res => res.json())
                 .then(castData => {
-                    const castList = castData.cast ? castData.cast.slice(0, 4).map(c => c.name).join(', ') : 'Keine Angaben';
+                    const castList = castData.cast ? castData.cast.slice(0, 4).map(c => c.name).join(', ') : 'Unbekannt';
                     addFoundMovie(title, year, genre, poster, overview, castList);
                 })
                 .catch(() => {
-                    addFoundMovie(title, year, genre, poster, overview, 'Keine Angaben');
+                    addFoundMovie(title, year, genre, poster, overview, 'Unbekannt');
                 });
         }
 
@@ -682,8 +711,8 @@
                 genre: "Film / Serie",
                 tab: currentTab,
                 poster: "🎬",
+                cast: "Nicht angegeben",
                 overview: "Keine Beschreibung vorhanden.",
-                cast: "Unbekannt",
                 selected: false
             });
 
@@ -702,8 +731,8 @@
                     document.getElementById('newTitle').value = item.title;
                     document.getElementById('newGenre').value = item.genre;
                     document.getElementById('newYear').value = item.year;
-                    document.getElementById('newOverview').value = item.overview || '';
                     document.getElementById('newCast').value = item.cast || '';
+                    document.getElementById('newOverview').value = item.overview || '';
                     document.getElementById('newPoster').value = item.poster.startsWith('http') ? item.poster : '';
                     document.getElementById('newTab').value = item.tab;
                 }
@@ -712,8 +741,8 @@
                 document.getElementById('newTitle').value = '';
                 document.getElementById('newGenre').value = '';
                 document.getElementById('newYear').value = '';
-                document.getElementById('newOverview').value = '';
                 document.getElementById('newCast').value = '';
+                document.getElementById('newOverview').value = '';
                 document.getElementById('newPoster').value = '';
                 document.getElementById('newTab').value = currentTab;
             }
@@ -729,8 +758,8 @@
             const editId = document.getElementById('editId').value;
             const genre = document.getElementById('newGenre').value.trim() || 'Film / Serie';
             const year = document.getElementById('newYear').value.trim() || '2026';
-            const overview = document.getElementById('newOverview').value.trim() || 'Keine Beschreibung.';
             const cast = document.getElementById('newCast').value.trim() || 'Unbekannt';
+            const overview = document.getElementById('newOverview').value.trim() || 'Keine Beschreibung.';
             const posterInput = document.getElementById('newPoster').value.trim();
             const tab = document.getElementById('newTab').value;
 
@@ -740,8 +769,8 @@
                     item.title = title;
                     item.genre = genre;
                     item.year = year;
-                    item.overview = overview;
                     item.cast = cast;
+                    item.overview = overview;
                     if (posterInput) item.poster = posterInput;
                     item.tab = tab;
                 }
@@ -752,8 +781,8 @@
                     genre: genre,
                     year: year,
                     poster: posterInput || '🎬',
-                    overview: overview,
                     cast: cast,
+                    overview: overview,
                     tab: tab,
                     selected: false
                 });
@@ -762,30 +791,6 @@
             saveData();
             closeModal();
             renderList();
-        }
-
-        function showInfo(id) {
-            const item = mediaDatabase.find(i => i.id === id);
-            if (!item) return;
-
-            document.getElementById('infoTitle').textContent = item.title;
-            document.getElementById('infoMeta').textContent = `${item.year} \u2022 ${item.genre}`;
-            document.getElementById('infoOverview').textContent = item.overview || 'Keine Handlung verfügbar.';
-            document.getElementById('infoCast').textContent = item.cast || 'Keine Angaben';
-
-            const posterImg = document.getElementById('infoPoster');
-            if (item.poster.startsWith('http')) {
-                posterImg.src = item.poster;
-                posterImg.style.display = 'block';
-            } else {
-                posterImg.style.display = 'none';
-            }
-
-            document.getElementById('infoModal').style.display = 'flex';
-        }
-
-        function closeInfoModal() {
-            document.getElementById('infoModal').style.display = 'none';
         }
 
         function toggleSelect(id) {
@@ -817,7 +822,9 @@
 
             const filtered = mediaDatabase.filter(item => {
                 const matchesTab = item.tab === currentTab;
-                const matchesSearch = item.title.toLowerCase().includes(query) || (item.genre && item.genre.toLowerCase().includes(query));
+                const matchesSearch = item.title.toLowerCase().includes(query) || 
+                                      (item.genre && item.genre.toLowerCase().includes(query)) ||
+                                      (item.cast && item.cast.toLowerCase().includes(query));
                 return matchesTab && matchesSearch;
             });
 
@@ -837,23 +844,26 @@
                     : `<div class="card-poster-img">${item.poster}</div>`;
 
                 card.innerHTML = `
-                    <div class="card-left" onclick="showInfo(${item.id})">
-                        <label class="checkbox-container" onclick="event.stopPropagation()">
-                            <input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleSelect(${item.id})">
-                            <span class="custom-checkbox"></span>
-                        </label>
-                        ${posterHTML}
-                        <div class="card-info">
-                            <h4>${item.title}</h4>
-                            <p>${item.year} &bull; ${item.genre}</p>
+                    <div class="card-header-line">
+                        <div class="card-main-info">
+                            <label class="checkbox-container">
+                                <input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleSelect(${item.id})">
+                                <span class="custom-checkbox"></span>
+                            </label>
+                            ${posterHTML}
+                            <div class="card-text-details">
+                                <h4>${item.title}</h4>
+                                <div class="card-meta">${item.year} &bull; ${item.genre}</div>
+                                <div class="card-actors">👤 ${item.cast || 'Unbekannt'}</div>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-icon-btn" onclick="openModal(${item.id})" title="Bearbeiten">✏️</button>
+                            <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
+                            <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
                         </div>
                     </div>
-                    <div class="card-actions">
-                        <button class="action-icon-btn" onclick="showInfo(${item.id})" title="Details / Handlung">ℹ️</button>
-                        <button class="action-icon-btn" onclick="openModal(${item.id})" title="Bearbeiten">✏️</button>
-                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
-                        <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
-                    </div>
+                    ${item.overview ? `<div class="card-overview">📖 ${item.overview}</div>` : ''}
                 `;
                 grid.appendChild(card);
             });
@@ -863,13 +873,13 @@
             const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
             if (activeItems.length === 0) return alert('Keine Filme vorhanden!');
             const randomItem = activeItems[Math.floor(Math.random() * activeItems.length)];
-            alert(`Dein Filmtipp für heute:\n\n🎬 ${randomItem.title} (${randomItem.year})`);
+            alert(`Dein Filmtipp für heute:\n\n🎬 ${randomItem.title} (${randomItem.year})\nMit: ${randomItem.cast || 'Unbekannt'}`);
         }
 
         function shareList() {
             const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
             if (activeItems.length === 0) return alert('Die Liste ist leer!');
-            const text = (currentTab === 'watchlist' ? 'Meine Watchlist:\n' : 'Bereits gesehen:\n') + activeItems.map(i => `- ${i.title}`).join('\n');
+            const text = (currentTab === 'watchlist' ? 'Meine Watchlist:\n' : 'Bereits gesehen:\n') + activeItems.map(i => `- ${i.title} (${i.year})`).join('\n');
             navigator.clipboard.writeText(text).then(() => alert('In die Zwischenablage kopiert!'));
         }
 
