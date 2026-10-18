@@ -88,9 +88,7 @@
             transition: background-color 0.2s;
         }
 
-        .icon-btn:hover {
-            background-color: var(--border-color);
-        }
+        .icon-btn:hover { background-color: var(--border-color); }
 
         .add-btn-main {
             background-color: var(--primary-color);
@@ -137,6 +135,7 @@
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
+            position: relative;
         }
 
         .add-card h3 {
@@ -165,9 +164,7 @@
             outline: none;
         }
 
-        .add-input:focus {
-            border-color: var(--primary-color);
-        }
+        .add-input:focus { border-color: var(--primary-color); }
 
         .input-icon {
             position: absolute;
@@ -179,9 +176,57 @@
         }
 
         .add-hint {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
             margin: 0;
+        }
+
+        /* Autocomplete Suchergebnisse Popover */
+        .search-results-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 4px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .search-result-item:hover { background-color: var(--surface-color); }
+
+        .search-result-poster {
+            width: 32px;
+            height: 46px;
+            border-radius: 4px;
+            object-fit: cover;
+            background-color: #262c36;
+        }
+
+        .search-result-info h5 {
+            margin: 0 0 2px 0;
+            font-size: 0.88rem;
+            color: var(--text-color);
+        }
+
+        .search-result-info p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
         /* Tabs */
@@ -206,9 +251,7 @@
             gap: 6px;
         }
 
-        .tab.active {
-            color: var(--text-color);
-        }
+        .tab.active { color: var(--text-color); }
 
         .tab.active::after {
             content: '';
@@ -255,7 +298,7 @@
             background-position: 12px center;
         }
 
-        /* Medien Karten */
+        /* Karten */
         .grid {
             display: flex;
             flex-direction: column;
@@ -344,7 +387,7 @@
         .card-actions {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
         }
 
         .action-icon-btn {
@@ -352,12 +395,13 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             padding: 6px;
             border-radius: 6px;
         }
+        .action-icon-btn:hover { color: var(--text-color); background-color: rgba(255,255,255,0.05); }
 
-        /* Modal für erweiterten Eintrag */
+        /* Modal für manuellen Eintrag & Bearbeiten */
         .modal {
             display: none;
             position: fixed;
@@ -429,19 +473,21 @@
             <div class="header-actions">
                 <button class="icon-btn" onclick="exportData()" title="Exportieren">📥</button>
                 <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Importieren">📤</button>
-                <button class="add-btn-main" onclick="openModal()" title="Neuen Film hinzufügen">+</button>
+                <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
                 <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
             </div>
         </div>
 
-        <!-- Neuen Film suchen & hinzufügen Box -->
+        <!-- Neuen Film suchen & automatisch Hinzufügen -->
         <div class="add-card">
             <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
             <div class="input-wrapper">
                 <span class="input-icon">🎬</span>
-                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Inception, Tatort...)" onkeydown="if(event.key === 'Enter') quickAddMovie()">
+                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Inception...)" oninput="searchOnlineMovies(this.value)" onkeydown="if(event.key === 'Enter') quickAddCustom()">
             </div>
-            <p class="add-hint">Tippe den Namen ein und drücke Enter zum Hinzufügen.</p>
+            <p class="add-hint">Tippe den Namen ein, um Plakate, Genre & Jahr automatisch zu laden.</p>
+            
+            <div id="searchResultsPopup" class="search-results-popup"></div>
         </div>
 
         <!-- Gimmicks -->
@@ -460,21 +506,20 @@
             </button>
         </div>
 
-        <!-- Suchleiste für gespeicherte Filme (In BEIDEN Tabs) -->
+        <!-- Suchleiste für gespeicherte Filme -->
         <div class="filter-row">
             <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen..." onkeyup="renderList()">
         </div>
 
         <!-- Medien Liste -->
-        <div id="mediaGrid" class="grid">
-            <!-- Dynamische Karten -->
-        </div>
+        <div id="mediaGrid" class="grid"></div>
     </div>
 
-    <!-- Modal für erweiterten Eintrag (+ Button) -->
+    <!-- Modal für manuellen Eintrag & Bearbeiten -->
     <div id="addModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin: 0;">Neuen Eintrag hinzufügen</h3>
+            <h3 id="modalTitleText" style="margin: 0;">Neuen Eintrag hinzufügen</h3>
+            <input type="hidden" id="editId">
             <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: Münster...)">
             <input type="text" id="newGenre" placeholder="Genre / Ermittler (z.B. Krimi, Thiel & Boerne)">
             <input type="text" id="newYear" placeholder="Jahr (z.B. 2026)">
@@ -492,11 +537,13 @@
 
     <script>
         let currentTab = 'watchlist';
+        let searchTimeout = null;
+        const TMDB_API_KEY = '15d2ea6d0dc1d476efb279268b376468';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
-            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi, Drama", tab: "watchlist", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=100&q=80", selected: false },
+            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi, Drama", tab: "watchlist", poster: "https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", selected: false },
             { id: 2, title: "Tatort: Münster - Schwanensee", year: "2024", genre: "Krimi", tab: "watchlist", poster: "🕵️‍♂️", selected: false },
-            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi, Thriller", tab: "watched", poster: "🌀", selected: false }
+            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi, Thriller", tab: "watched", poster: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", selected: false }
         ];
 
         function saveData() {
@@ -510,69 +557,153 @@
             renderList();
         }
 
-        /* Schnell-Hinzufügen aus der oberen Box */
-        function quickAddMovie() {
+        function searchOnlineMovies(query) {
+            clearTimeout(searchTimeout);
+            const popup = document.getElementById('searchResultsPopup');
+            
+            if (!query.trim()) {
+                popup.style.display = 'none';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&language=de-DE&query=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.results && data.results.length > 0) {
+                            popup.innerHTML = '';
+                            data.results.slice(0, 5).forEach(item => {
+                                const title = item.title || item.name;
+                                const releaseDate = item.release_date || item.first_air_date || '';
+                                const year = releaseDate ? releaseDate.split('-')[0] : 'k.A.';
+                                const poster = item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : '🎬';
+                                const mediaType = item.media_type === 'tv' ? 'Serie' : 'Film';
+
+                                const div = document.createElement('div');
+                                div.className = 'search-result-item';
+                                div.onclick = () => selectOnlineMovie(title, year, mediaType, poster);
+
+                                const imgHTML = poster.startsWith('http') 
+                                    ? `<img src="${poster}" class="search-result-poster">` 
+                                    : `<div class="search-result-poster" style="display:flex;align-items:center;justify-content:center;">🎬</div>`;
+
+                                div.innerHTML = `
+                                    ${imgHTML}
+                                    <div class="search-result-info">
+                                        <h5>${title}</h5>
+                                        <p>${year} &bull; ${mediaType}</p>
+                                    </div>
+                                `;
+                                popup.appendChild(div);
+                            });
+                            popup.style.display = 'block';
+                        } else {
+                            popup.style.display = 'none';
+                        }
+                    })
+                    .catch(() => popup.style.display = 'none');
+            }, 300);
+        }
+
+        function selectOnlineMovie(title, year, genre, poster) {
+            mediaDatabase.unshift({
+                id: Date.now(),
+                title: title,
+                year: year,
+                genre: genre,
+                tab: currentTab,
+                poster: poster,
+                selected: false
+            });
+
+            saveData();
+            document.getElementById('quickInput').value = '';
+            document.getElementById('searchResultsPopup').style.display = 'none';
+            renderList();
+        }
+
+        function quickAddCustom() {
             const input = document.getElementById('quickInput');
             const titleText = input.value.trim();
             if (!titleText) return;
-
-            let detectedGenre = "Film / Serie";
-            let posterIcon = "🎬";
-            const lower = titleText.toLowerCase();
-            if (lower.includes('tatort') || lower.includes('polizeiruf') || lower.includes('krimi')) {
-                detectedGenre = "Krimi";
-                posterIcon = "🕵️‍♂️";
-            } else if (lower.includes('sci-fi') || lower.includes('interstellar') || lower.includes('inception')) {
-                detectedGenre = "Sci-Fi";
-                posterIcon = "🌌";
-            }
 
             mediaDatabase.unshift({
                 id: Date.now(),
                 title: titleText,
                 year: "2026",
-                genre: detectedGenre,
+                genre: "Film / Serie",
                 tab: currentTab,
-                poster: posterIcon,
+                poster: "🎬",
                 selected: false
             });
 
             saveData();
             input.value = '';
+            document.getElementById('searchResultsPopup').style.display = 'none';
             renderList();
         }
 
-        /* Hinzufügen über das + Modal */
-        function openModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function openModal(editId = null) {
+            document.getElementById('editId').value = editId || '';
+            if (editId) {
+                document.getElementById('modalTitleText').textContent = 'Eintrag bearbeiten';
+                const item = mediaDatabase.find(i => i.id === editId);
+                if (item) {
+                    document.getElementById('newTitle').value = item.title;
+                    document.getElementById('newGenre').value = item.genre;
+                    document.getElementById('newYear').value = item.year;
+                    document.getElementById('newPoster').value = item.poster.startsWith('http') ? item.poster : '';
+                    document.getElementById('newTab').value = item.tab;
+                }
+            } else {
+                document.getElementById('modalTitleText').textContent = 'Neuen Eintrag hinzufügen';
+                document.getElementById('newTitle').value = '';
+                document.getElementById('newGenre').value = '';
+                document.getElementById('newYear').value = '';
+                document.getElementById('newPoster').value = '';
+                document.getElementById('newTab').value = currentTab;
+            }
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
         function closeModal() { document.getElementById('addModal').style.display = 'none'; }
 
         function saveModalEntry() {
             const title = document.getElementById('newTitle').value.trim();
             if (!title) return;
 
+            const editId = document.getElementById('editId').value;
             const genre = document.getElementById('newGenre').value.trim() || 'Film / Serie';
             const year = document.getElementById('newYear').value.trim() || '2026';
-            const poster = document.getElementById('newPoster').value.trim() || '🎬';
+            const posterInput = document.getElementById('newPoster').value.trim();
             const tab = document.getElementById('newTab').value;
 
-            mediaDatabase.unshift({
-                id: Date.now(),
-                title: title,
-                genre: genre,
-                year: year,
-                poster: poster,
-                tab: tab,
-                selected: false
-            });
+            if (editId) {
+                // Bearbeiten
+                const item = mediaDatabase.find(i => i.id == editId);
+                if (item) {
+                    item.title = title;
+                    item.genre = genre;
+                    item.year = year;
+                    if (posterInput) item.poster = posterInput;
+                    item.tab = tab;
+                }
+            } else {
+                // Neu hinzufügen
+                mediaDatabase.unshift({
+                    id: Date.now(),
+                    title: title,
+                    genre: genre,
+                    year: year,
+                    poster: posterInput || '🎬',
+                    tab: tab,
+                    selected: false
+                });
+            }
 
             saveData();
             closeModal();
             renderList();
-
-            document.getElementById('newTitle').value = '';
-            document.getElementById('newGenre').value = '';
-            document.getElementById('newYear').value = '';
-            document.getElementById('newPoster').value = '';
         }
 
         function toggleSelect(id) {
@@ -619,12 +750,9 @@
                 const card = document.createElement('div');
                 card.className = 'card';
 
-                let posterHTML = '';
-                if (item.poster.startsWith('http')) {
-                    posterHTML = `<img src="${item.poster}" class="card-poster-img" alt="Poster">`;
-                } else {
-                    posterHTML = `<div class="card-poster-img">${item.poster}</div>`;
-                }
+                let posterHTML = item.poster.startsWith('http')
+                    ? `<img src="${item.poster}" class="card-poster-img" alt="Poster">`
+                    : `<div class="card-poster-img">${item.poster}</div>`;
 
                 card.innerHTML = `
                     <div class="card-left">
@@ -639,7 +767,8 @@
                         </div>
                     </div>
                     <div class="card-actions">
-                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="In anderen Ordner verschieben">🔄</button>
+                        <button class="action-icon-btn" onclick="openModal(${item.id})" title="Bearbeiten">✏️</button>
+                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
                         <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
                     </div>
                 `;
