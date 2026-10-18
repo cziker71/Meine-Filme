@@ -130,6 +130,60 @@
             gap: 6px;
         }
 
+        /* Such- & Hinzufügen-Box */
+        .add-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .add-card h3 {
+            font-size: 0.85rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .add-input {
+            width: 100%;
+            padding: 12px 14px;
+            padding-left: 40px;
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .add-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .add-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
         /* Tabs */
         .tabs {
             display: flex;
@@ -179,7 +233,7 @@
             color: white;
         }
 
-        /* Suchleiste */
+        /* Suchleiste für gespeicherte Filme */
         .filter-row {
             display: flex;
             gap: 8px;
@@ -201,7 +255,7 @@
             background-position: 12px center;
         }
 
-        /* Medien Karten mit Vorschau / Poster */
+        /* Medien Karten */
         .grid {
             display: flex;
             flex-direction: column;
@@ -258,7 +312,7 @@
             font-weight: bold;
         }
 
-        /* Vorschaubild / Poster */
+        /* Vorschau / Poster */
         .card-poster-img {
             width: 48px;
             height: 68px;
@@ -303,7 +357,7 @@
             border-radius: 6px;
         }
 
-        /* Modal für neuen Eintrag (+ Button) */
+        /* Modal für erweiterten Eintrag */
         .modal {
             display: none;
             position: fixed;
@@ -363,7 +417,7 @@
 <body>
 
     <div class="container">
-        <!-- Header mit + Button -->
+        <!-- Header -->
         <div class="header">
             <div class="header-left">
                 <div class="app-icon">🎬</div>
@@ -378,6 +432,16 @@
                 <button class="add-btn-main" onclick="openModal()" title="Neuen Film hinzufügen">+</button>
                 <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
             </div>
+        </div>
+
+        <!-- Neuen Film suchen & hinzufügen Box -->
+        <div class="add-card">
+            <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
+            <div class="input-wrapper">
+                <span class="input-icon">🎬</span>
+                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Inception, Tatort...)" onkeydown="if(event.key === 'Enter') quickAddMovie()">
+            </div>
+            <p class="add-hint">Tippe den Namen ein und drücke Enter zum Hinzufügen.</p>
         </div>
 
         <!-- Gimmicks -->
@@ -396,7 +460,7 @@
             </button>
         </div>
 
-        <!-- Suchleiste (Sucht in BEIDEN Tabs) -->
+        <!-- Suchleiste für gespeicherte Filme (In BEIDEN Tabs) -->
         <div class="filter-row">
             <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen..." onkeyup="renderList()">
         </div>
@@ -407,7 +471,7 @@
         </div>
     </div>
 
-    <!-- Modal für neuen Film -->
+    <!-- Modal für erweiterten Eintrag (+ Button) -->
     <div id="addModal" class="modal">
         <div class="modal-content">
             <h3 style="margin: 0;">Neuen Eintrag hinzufügen</h3>
@@ -421,7 +485,7 @@
             </select>
             <div class="modal-buttons">
                 <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
-                <button class="btn-save" onclick="saveNewEntry()">Speichern</button>
+                <button class="btn-save" onclick="saveModalEntry()">Speichern</button>
             </div>
         </div>
     </div>
@@ -446,10 +510,43 @@
             renderList();
         }
 
+        /* Schnell-Hinzufügen aus der oberen Box */
+        function quickAddMovie() {
+            const input = document.getElementById('quickInput');
+            const titleText = input.value.trim();
+            if (!titleText) return;
+
+            let detectedGenre = "Film / Serie";
+            let posterIcon = "🎬";
+            const lower = titleText.toLowerCase();
+            if (lower.includes('tatort') || lower.includes('polizeiruf') || lower.includes('krimi')) {
+                detectedGenre = "Krimi";
+                posterIcon = "🕵️‍♂️";
+            } else if (lower.includes('sci-fi') || lower.includes('interstellar') || lower.includes('inception')) {
+                detectedGenre = "Sci-Fi";
+                posterIcon = "🌌";
+            }
+
+            mediaDatabase.unshift({
+                id: Date.now(),
+                title: titleText,
+                year: "2026",
+                genre: detectedGenre,
+                tab: currentTab,
+                poster: posterIcon,
+                selected: false
+            });
+
+            saveData();
+            input.value = '';
+            renderList();
+        }
+
+        /* Hinzufügen über das + Modal */
         function openModal() { document.getElementById('addModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('addModal').style.display = 'none'; }
 
-        function saveNewEntry() {
+        function saveModalEntry() {
             const title = document.getElementById('newTitle').value.trim();
             if (!title) return;
 
@@ -522,7 +619,6 @@
                 const card = document.createElement('div');
                 card.className = 'card';
 
-                // Prüfen ob Poster ein Bild-Link oder ein Icon ist
                 let posterHTML = '';
                 if (item.poster.startsWith('http')) {
                     posterHTML = `<img src="${item.poster}" class="card-poster-img" alt="Poster">`;
@@ -543,7 +639,7 @@
                         </div>
                     </div>
                     <div class="card-actions">
-                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
+                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="In anderen Ordner verschieben">🔄</button>
                         <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
                     </div>
                 `;
