@@ -14,7 +14,6 @@
             --text-color: #f0f6fc;
             --text-secondary: #8b949e;
             --border-color: #30363d;
-            --accent-green: #238636;
         }
 
         body {
@@ -70,6 +69,7 @@
 
         .header-actions {
             display: flex;
+            align-items: center;
             gap: 6px;
         }
 
@@ -92,7 +92,23 @@
             background-color: var(--border-color);
         }
 
-        /* Gimmick-Leiste (Zufall & Teilen) */
+        .add-btn-main {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
+            margin-left: 4px;
+        }
+
+        /* Gimmick-Leiste */
         .gimmick-bar {
             display: flex;
             gap: 8px;
@@ -112,65 +128,6 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .gimmick-btn:hover {
-            border-color: var(--primary-color);
-            background-color: var(--surface-card);
-        }
-
-        /* Such- und Hinzufügen-Box */
-        .add-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .add-card h3 {
-            font-size: 0.9rem;
-            margin: 0 0 8px 0;
-            color: var(--text-color);
-            letter-spacing: 0.5px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 6px;
-        }
-
-        .add-input {
-            width: 100%;
-            padding: 11px 14px;
-            padding-left: 38px;
-            background-color: var(--surface-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        .add-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-
-        .add-hint {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin: 0;
         }
 
         /* Tabs */
@@ -222,7 +179,7 @@
             color: white;
         }
 
-        /* Filter und Suchleiste für Listen */
+        /* Suchleiste */
         .filter-row {
             display: flex;
             gap: 8px;
@@ -244,18 +201,7 @@
             background-position: 12px center;
         }
 
-        .filter-select {
-            background-color: var(--surface-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 0 12px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* Medien Karten */
+        /* Medien Karten mit Vorschau / Poster */
         .grid {
             display: flex;
             flex-direction: column;
@@ -287,9 +233,7 @@
             cursor: pointer;
         }
 
-        .checkbox-container input {
-            display: none;
-        }
+        .checkbox-container input { display: none; }
 
         .custom-checkbox {
             width: 22px;
@@ -300,7 +244,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
         }
 
         .checkbox-container input:checked + .custom-checkbox {
@@ -315,20 +258,22 @@
             font-weight: bold;
         }
 
-        .card-poster {
-            width: 42px;
-            height: 58px;
-            background-color: #262c36;
+        /* Vorschaubild / Poster */
+        .card-poster-img {
+            width: 48px;
+            height: 68px;
             border-radius: 6px;
+            object-fit: cover;
+            background-color: #262c36;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
+            font-size: 20px;
         }
 
         .card-info h4 {
-            margin: 0 0 3px 0;
+            margin: 0 0 4px 0;
             font-size: 0.95rem;
             color: var(--text-color);
             white-space: nowrap;
@@ -338,7 +283,7 @@
 
         .card-info p {
             margin: 0;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
@@ -353,21 +298,13 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
             padding: 6px;
             border-radius: 6px;
         }
-        .action-icon-btn:hover {
-            color: var(--text-color);
-            background-color: rgba(255,255,255,0.05);
-        }
-        .action-icon-btn.delete:hover {
-            color: #ff7b72;
-            background-color: rgba(255,123,114,0.1);
-        }
 
-        /* Zufalls-Modal oder Banner */
-        #randomModal {
+        /* Modal für neuen Eintrag (+ Button) */
+        .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -379,20 +316,46 @@
             z-index: 100;
         }
 
-        .modal-card {
+        .modal-content {
             background-color: var(--surface-card);
             border: 1px solid var(--border-color);
-            padding: 24px;
+            padding: 20px;
             border-radius: 16px;
             width: 100%;
-            max-width: 350px;
-            text-align: center;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .modal-card h3 {
-            margin-top: 0;
-            color: var(--primary-color);
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
         }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .modal-buttons button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel { background-color: var(--surface-color); color: var(--text-secondary); }
+        .btn-save { background-color: var(--primary-color); color: white; }
 
         #fileInput { display: none; }
     </style>
@@ -400,7 +363,7 @@
 <body>
 
     <div class="container">
-        <!-- Header -->
+        <!-- Header mit + Button -->
         <div class="header">
             <div class="header-left">
                 <div class="app-icon">🎬</div>
@@ -410,26 +373,17 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="exportData()" title="Backup exportieren">📥</button>
-                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup importieren">📤</button>
+                <button class="icon-btn" onclick="exportData()" title="Exportieren">📥</button>
+                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Importieren">📤</button>
+                <button class="add-btn-main" onclick="openModal()" title="Neuen Film hinzufügen">+</button>
                 <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
             </div>
         </div>
 
-        <!-- Gimmicks: Zufall & Teilen -->
+        <!-- Gimmicks -->
         <div class="gimmick-bar">
             <button class="gimmick-btn" onclick="pickRandomMovie()">🎲 Was gucken?</button>
             <button class="gimmick-btn" onclick="shareList()">📋 Liste kopieren</button>
-        </div>
-
-        <!-- Neuen Film Hinzufügen Box -->
-        <div class="add-card">
-            <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
-            <div class="input-wrapper">
-                <span class="input-icon">➕</span>
-                <input type="text" id="quickInput" class="add-input" placeholder="Titel eingeben (z.B. Tatort, Interstellar...)" onkeydown="if(event.key === 'Enter') addNewMovie()">
-            </div>
-            <p class="add-hint">Namen eintippen und Enter drücken zum Speichern.</p>
         </div>
 
         <!-- Tabs -->
@@ -442,15 +396,9 @@
             </button>
         </div>
 
-        <!-- Filter und Suchleiste (Funktioniert jetzt in BEIDEN Tabs!) -->
+        <!-- Suchleiste (Sucht in BEIDEN Tabs) -->
         <div class="filter-row">
-            <input type="text" id="listSearch" class="list-search" placeholder="In aktueller Liste suchen..." onkeyup="renderList()">
-            <select id="genreFilter" class="filter-select" onchange="renderList()">
-                <option value="Alle">Alle Genres</option>
-                <option value="Krimi">Krimi / Tatort</option>
-                <option value="Sci-Fi">Sci-Fi / Thriller</option>
-                <option value="Drama">Drama</option>
-            </select>
+            <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen..." onkeyup="renderList()">
         </div>
 
         <!-- Medien Liste -->
@@ -459,12 +407,22 @@
         </div>
     </div>
 
-    <!-- Zufalls-Auswahl Pop-up -->
-    <div id="randomModal" onclick="closeRandomModal()">
-        <div class="modal-card" onclick="event.stopPropagation()">
-            <h3>Dein Filmtipp für heute:</h3>
-            <p id="randomMovieText" style="font-size: 1.1rem; font-weight: bold; margin: 15px 0;"></p>
-            <button class="gimmick-btn" style="width: 100%; justify-content: center; background-color: var(--primary-color); border: none; color: white;" onclick="closeRandomModal()">Super, den schaue ich!</button>
+    <!-- Modal für neuen Film -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin: 0;">Neuen Eintrag hinzufügen</h3>
+            <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: Münster...)">
+            <input type="text" id="newGenre" placeholder="Genre / Ermittler (z.B. Krimi, Thiel & Boerne)">
+            <input type="text" id="newYear" placeholder="Jahr (z.B. 2026)">
+            <input type="text" id="newPoster" placeholder="Bild-URL / Poster-Link (optional)">
+            <select id="newTab">
+                <option value="watchlist">Möchte ich sehen</option>
+                <option value="watched">Bereits gesehen</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
+                <button class="btn-save" onclick="saveNewEntry()">Speichern</button>
+            </div>
         </div>
     </div>
 
@@ -472,10 +430,9 @@
         let currentTab = 'watchlist';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
-            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi", tab: "watchlist", poster: "🌌", selected: false },
+            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi, Drama", tab: "watchlist", poster: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=100&q=80", selected: false },
             { id: 2, title: "Tatort: Münster - Schwanensee", year: "2024", genre: "Krimi", tab: "watchlist", poster: "🕵️‍♂️", selected: false },
-            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi", tab: "watched", poster: "🌀", selected: false },
-            { id: 4, title: "Polizeiruf 110: Rostock", year: "2021", genre: "Krimi", tab: "watched", poster: "🚓", selected: false }
+            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi, Thriller", tab: "watched", poster: "🌀", selected: false }
         ];
 
         function saveData() {
@@ -489,44 +446,41 @@
             renderList();
         }
 
-        function addNewMovie() {
-            const input = document.getElementById('quickInput');
-            const titleText = input.value.trim();
-            if (!titleText) return;
+        function openModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('addModal').style.display = 'none'; }
 
-            let detectedGenre = "Film / Serie";
-            let posterIcon = "🎬";
-            const lower = titleText.toLowerCase();
-            if (lower.includes('tatort') || lower.includes('polizeiruf') || lower.includes('krimi')) {
-                detectedGenre = "Krimi";
-                posterIcon = "🕵️‍♂️";
-            } else if (lower.includes('sci-fi') || lower.includes('interstellar') || lower.includes('inception')) {
-                detectedGenre = "Sci-Fi";
-                posterIcon = "🌌";
-            }
+        function saveNewEntry() {
+            const title = document.getElementById('newTitle').value.trim();
+            if (!title) return;
 
-            const newItem = {
+            const genre = document.getElementById('newGenre').value.trim() || 'Film / Serie';
+            const year = document.getElementById('newYear').value.trim() || '2026';
+            const poster = document.getElementById('newPoster').value.trim() || '🎬';
+            const tab = document.getElementById('newTab').value;
+
+            mediaDatabase.unshift({
                 id: Date.now(),
-                title: titleText,
-                year: "2026",
-                genre: detectedGenre,
-                tab: currentTab,
-                poster: posterIcon,
+                title: title,
+                genre: genre,
+                year: year,
+                poster: poster,
+                tab: tab,
                 selected: false
-            };
+            });
 
-            mediaDatabase.unshift(newItem);
             saveData();
-            input.value = '';
+            closeModal();
             renderList();
+
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newGenre').value = '';
+            document.getElementById('newYear').value = '';
+            document.getElementById('newPoster').value = '';
         }
 
         function toggleSelect(id) {
             const item = mediaDatabase.find(i => i.id === id);
-            if (item) {
-                item.selected = !item.selected;
-                saveData();
-            }
+            if (item) { item.selected = !item.selected; saveData(); }
         }
 
         function deleteItem(id) {
@@ -546,19 +500,15 @@
 
         function renderList() {
             const query = document.getElementById('listSearch').value.toLowerCase();
-            const genreVal = document.getElementById('genreFilter').value;
             const grid = document.getElementById('mediaGrid');
             
-            const watchlistCount = mediaDatabase.filter(i => i.tab === 'watchlist').length;
-            const watchedCount = mediaDatabase.filter(i => i.tab === 'watched').length;
-            document.getElementById('badgeWatchlist').textContent = watchlistCount;
-            document.getElementById('badgeWatched').textContent = watchedCount;
+            document.getElementById('badgeWatchlist').textContent = mediaDatabase.filter(i => i.tab === 'watchlist').length;
+            document.getElementById('badgeWatched').textContent = mediaDatabase.filter(i => i.tab === 'watched').length;
 
             const filtered = mediaDatabase.filter(item => {
                 const matchesTab = item.tab === currentTab;
                 const matchesSearch = item.title.toLowerCase().includes(query) || item.genre.toLowerCase().includes(query);
-                const matchesGenre = (genreVal === 'Alle') || item.genre.toLowerCase().includes(genreVal.toLowerCase());
-                return matchesTab && matchesSearch && matchesGenre;
+                return matchesTab && matchesSearch;
             });
 
             grid.innerHTML = '';
@@ -571,58 +521,48 @@
             filtered.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
+
+                // Prüfen ob Poster ein Bild-Link oder ein Icon ist
+                let posterHTML = '';
+                if (item.poster.startsWith('http')) {
+                    posterHTML = `<img src="${item.poster}" class="card-poster-img" alt="Poster">`;
+                } else {
+                    posterHTML = `<div class="card-poster-img">${item.poster}</div>`;
+                }
+
                 card.innerHTML = `
                     <div class="card-left">
                         <label class="checkbox-container">
                             <input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleSelect(${item.id})">
                             <span class="custom-checkbox"></span>
                         </label>
-                        <div class="card-poster">${item.poster}</div>
+                        ${posterHTML}
                         <div class="card-info">
                             <h4>${item.title}</h4>
                             <p>${item.year} &bull; ${item.genre}</p>
                         </div>
                     </div>
                     <div class="card-actions">
-                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="In anderen Ordner verschieben">🔄</button>
-                        <button class="action-icon-btn delete" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
+                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
+                        <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // Gimmick: Zufälliger Film aus der aktiven Liste
         function pickRandomMovie() {
             const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
-            if (activeItems.length === 0) {
-                alert('Keine Filme in dieser Liste vorhanden!');
-                return;
-            }
+            if (activeItems.length === 0) return alert('Keine Filme vorhanden!');
             const randomItem = activeItems[Math.floor(Math.random() * activeItems.length)];
-            document.getElementById('randomMovieText').textContent = `${randomItem.poster} ${randomItem.title} (${randomItem.year})`;
-            document.getElementById('randomModal').style.display = 'flex';
+            alert(`Dein Filmtipp für heute:\n\n🎬 ${randomItem.title} (${randomItem.year})`);
         }
 
-        function closeRandomModal() {
-            document.getElementById('randomModal').style.display = 'none';
-        }
-
-        // Gimmick: Liste als Text teilen
         function shareList() {
             const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
-            if (activeItems.length === 0) {
-                alert('Die Liste ist leer!');
-                return;
-            }
-            const listTitle = currentTab === 'watchlist' ? 'Meine Watchlist:' : 'Bereits gesehen:';
-            let text = `${listTitle}\n` + activeItems.map(i => `- ${i.title} (${i.year})`).join('\n');
-            
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Liste wurde in die Zwischenablage kopiert! Du kannst sie jetzt z.B. in WhatsApp einfügen.');
-            }).catch(() => {
-                alert('Konnte nicht kopiert werden.');
-            });
+            if (activeItems.length === 0) return alert('Die Liste ist leer!');
+            const text = (currentTab === 'watchlist' ? 'Meine Watchlist:\n' : 'Bereits gesehen:\n') + activeItems.map(i => `- ${i.title}`).join('\n');
+            navigator.clipboard.writeText(text).then(() => alert('In die Zwischenablage kopiert!'));
         }
 
         function exportData() {
@@ -645,9 +585,7 @@
                         saveData();
                         renderList();
                         alert('Daten erfolgreich importiert!');
-                    } catch (error) {
-                        alert('Fehler beim Lesen der Datei.');
-                    }
+                    } catch (error) { alert('Fehler beim Importieren.'); }
                 };
             }
         }
