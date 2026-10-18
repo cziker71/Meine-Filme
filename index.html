@@ -1,162 +1,514 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Medien-Datenbank</title>
-    <style>
-        :root {
-            --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --primary-color: #bb86fc;
-            --text-color: #e0e0e0;
-            --text-secondary: #a0a0a0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineTracker - Meine Film-Sammlung</title>
+  <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css)" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            color: #ffffff;
-        }
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
 
-        p.subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .search-box {
-            width: 100%;
-            padding: 12px 16px;
-            font-size: 1rem;
-            background-color: var(--surface-color);
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: var(--text-color);
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
-        }
+    .brand-icon {
+      background: var(--primary);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
 
-        .search-box:focus {
-            border-color: var(--primary-color);
-        }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 15px;
-        }
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
 
-        .card {
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
 
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin: 0 0 8px 0;
-            color: #ffffff;
-        }
+    .btn-icon {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
 
-        .card-info {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin: 4px 0;
-        }
+    /* Search Container */
+    .search-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            background-color: #2c2c2c;
-            color: var(--primary-color);
-            margin-top: 8px;
-        }
-    </style>
+    .search-card h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 12px 12px 40px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Search Results Grid */
+    .search-results {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .result-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .result-item img {
+      width: 45px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--border);
+    }
+
+    .result-info { flex: 1; }
+    .result-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .result-meta { font-size: 12px; color: var(--text-muted); }
+
+    .result-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .badge {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    /* Controls (In Liste suchen / Filter) */
+    .list-controls {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list-controls select {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    /* Movie Cards */
+    .movie-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .movie-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+    }
+
+    .movie-poster {
+      width: 55px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--border);
+    }
+
+    .movie-details { flex: 1; }
+    .movie-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .movie-meta { font-size: 12px; color: var(--text-muted); }
+
+    .action-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: transparent;
+    }
+
+    .action-check.checked {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .btn-delete:hover { color: var(--danger); }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Medien-Archiv</h1>
-        <p class="subtitle">Filme, Serien, Tatort & Polizeiruf in einer übersichtlichen Datenbank</p>
-        
-        <input type="text" id="searchInput" class="search-box" placeholder="Nach Titel, Genre oder Typ suchen (z. B. Tatort, Sci-Fi)..." onkeyup="filterMedia()">
-
-        <div id="mediaGrid" class="grid">
-            <!-- Die Datenbank wird hier dynamisch geladen -->
-        </div>
+  <header>
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-film"></i></div>
+      <div>
+        <div class="brand-title">CineTracker</div>
+        <div class="brand-subtitle">Meine Film-Sammlung</div>
+      </div>
     </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="exportData()" title="Exportieren"><i class="fa-solid fa-download"></i></button>
+      <button class="btn-icon" onclick="importData()" title="Importieren"><i class="fa-solid fa-upload"></i></button>
+    </div>
+  </header>
 
-    <script>
-        // Umfangsreiche lokale Datenbank (Erweiterbar mit allen nationalen & internationalen Titeln)
-        const mediaDatabase = [
-            { title: "Tatort: Schwanensee", type: "Tatort", genre: "Krimi", year: 2024, info: "Ermittler Ballauf & Schenk" },
-            { title: "Polizeiruf 110: Des Teilung", type: "Polizeiruf", genre: "Krimi", year: 2023, info: "Ermittler Brasch" },
-            { title: "Inception", type: "Film", genre: "Sci-Fi / Thriller", year: 2010, info: "Regie: Christopher Nolan" },
-            { title: "Breaking Bad", type: "Serie", genre: "Drama", year: 2008, info: "5 Staffeln (Komplett)" },
-            { title: "Interstellar", type: "Film", genre: "Sci-Fi", year: 2014, info: "Episches Weltraum-Drama" },
-            { title: "Tatort: Münster - Des Teufels Longine", type: "Tatort", genre: "Krimi", year: 2023, info: "Thiel & Boerne" },
-            { title: "Dark", type: "Serie", genre: "Mystery", year: 2017, info: "Deutsche Netflix-Kultserie" },
-            { title: "Polizeiruf 110: Sabine", type: "Polizeiruf", genre: "Krimi", year: 2021, info: "Rostock-Ermittler" },
-            { title: "The Dark Knight", type: "Film", genre: "Action / Thriller", year: 2008, info: "Batman Klassiker" },
-            { title: "Sherlock", type: "Serie", genre: "Krimi / Drama", year: 2010, info: "BBC Produktion" }
-        ];
+  <div class="search-card">
+    <h2>Neuen Film suchen & hinzufügen</h2>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-film"></i>
+      <input type="text" id="searchInput" placeholder="Filmtitel oder Serie eingeben..." oninput="debounceSearch()">
+    </div>
+    <div class="search-hint">Tippe den Namen ein, um Filmplakate, Genre & Jahr automatisch zu laden.</div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
 
-        function displayMedia(items) {
-            const grid = document.getElementById('mediaGrid');
-            grid.innerHTML = '';
+  <div class="tabs">
+    <button class="tab-btn active" id="tabWant" onclick="switchTab('want')">
+      <i class="fa-solid fa-bookmark"></i> Möchte ich sehen <span class="badge" id="countWant">0</span>
+    </button>
+    <button class="tab-btn" id="tabSeen" onclick="switchTab('seen')">
+      <i class="fa-solid fa-circle-check"></i> Bereits gesehen <span class="badge" id="countSeen">0</span>
+    </button>
+  </div>
 
-            if (items.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-secondary);">Keine Einträge gefunden.</p>';
-                return;
-            }
+  <div class="list-controls">
+    <div class="input-wrapper" style="margin: 0;">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="filterInput" placeholder="In dieser Liste suchen..." oninput="renderList()">
+    </div>
+  </div>
 
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <h3 class="card-title">${item.title}</h3>
-                    <div class="card-info">📅 ${item.year} &bull; 📂 ${item.genre}</div>
-                    <div class="card-info">${item.info}</div>
-                    <span class="badge">${item.type}</span>
-                `;
-                grid.appendChild(card);
-            });
-        }
+  <div id="movieList" class="movie-list"></div>
 
-        function filterMedia() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = mediaDatabase.filter(item => 
-                item.title.toLowerCase().includes(query) || 
-                item.genre.toLowerCase().includes(query) || 
-                item.type.toLowerCase().includes(query) ||
-                item.info.toLowerCase().includes(query)
-            );
-            displayMedia(filtered);
-        }
+  <script>
+    const API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
+    let currentTab = 'want';
+    let movies = JSON.parse(localStorage.getItem('cineTracker_movies') || '[]');
+    let searchTimeout = null;
 
-        // Initiale Ansicht beim Laden
-        displayMedia(mediaDatabase);
-    </script>
+    function saveMovies() {
+      localStorage.setItem('cineTracker_movies', JSON.stringify(movies));
+      renderList();
+    }
 
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tabWant').classList.toggle('active', tab === 'want');
+      document.getElementById('tabSeen').classList.toggle('active', tab === 'seen');
+      renderList();
+    }
+
+    function debounceSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(searchTMDB, 400);
+    }
+
+    async function searchTMDB() {
+      const query = document.getElementById('searchInput').value.trim();
+      const resultsDiv = document.getElementById('searchResults');
+      
+      if (!query) {
+        resultsDiv.innerHTML = '';
+        return;
+      }
+
+      const url = `[https://api.themoviedb.org/3/search/multi?api_key=$](https://api.themoviedb.org/3/search/multi?api_key=$){API_KEY}&language=de-DE&query=${encodeURIComponent(query)}`;
+      
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        resultsDiv.innerHTML = '';
+
+        if (!data.results || data.results.length === 0) return;
+
+        data.results.slice(0, 4).forEach(item => {
+          if (item.media_type !== 'movie' && item.media_type !== 'tv') return;
+
+          const title = item.title || item.name;
+          const year = (item.release_date || item.first_air_date || '').substring(0, 4);
+          const poster = item.poster_path 
+            ? `[https://image.tmdb.org/t/p/w92$](https://image.tmdb.org/t/p/w92$){item.poster_path}`
+            : '[https://via.placeholder.com/92x138?text=Kein+Bild](https://via.placeholder.com/92x138?text=Kein+Bild)';
+
+          const el = document.createElement('div');
+          el.className = 'result-item';
+          el.innerHTML = `
+            <img src="${poster}">
+            <div class="result-info">
+              <div class="result-title">${title}</div>
+              <div class="result-meta">${year} • ${item.media_type === 'tv' ? 'Serie' : 'Film'}</div>
+            </div>
+            <button class="result-btn" onclick='addMovie(${JSON.stringify(item).replace(/'/g, "&apos;")})'>+ Liste</button>
+          `;
+          resultsDiv.appendChild(el);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function addMovie(item) {
+      const title = item.title || item.name;
+      const year = (item.release_date || item.first_air_date || '').substring(0, 4);
+      const poster = item.poster_path ? `[https://image.tmdb.org/t/p/w185$](https://image.tmdb.org/t/p/w185$){item.poster_path}` : '';
+
+      if (!movies.some(m => m.id === item.id)) {
+        movies.push({
+          id: item.id,
+          title: title,
+          year: year,
+          type: item.media_type === 'tv' ? 'Serie' : 'Film',
+          poster: poster,
+          seen: false
+        });
+        saveMovies();
+      }
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchResults').innerHTML = '';
+    }
+
+    function toggleSeen(id) {
+      const movie = movies.find(m => m.id === id);
+      if (movie) {
+        movie.seen = !movie.seen;
+        saveMovies();
+      }
+    }
+
+    function deleteMovie(id) {
+      movies = movies.filter(m => m.id !== id);
+      saveMovies();
+    }
+
+    function renderList() {
+      const listDiv = document.getElementById('movieList');
+      const filterText = document.getElementById('filterInput').value.toLowerCase();
+
+      const wantList = movies.filter(m => !m.seen);
+      const seenList = movies.filter(m => m.seen);
+
+      document.getElementById('countWant').innerText = wantList.length;
+      document.getElementById('countSeen').innerText = seenList.length;
+
+      const activeList = currentTab === 'want' ? wantList : seenList;
+      const filtered = activeList.filter(m => m.title.toLowerCase().includes(filterText));
+
+      listDiv.innerHTML = '';
+
+      if (filtered.length === 0) {
+        listDiv.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">Keine Einträge gefunden.</div>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+        card.innerHTML = `
+          <div class="action-check ${m.seen ? 'checked' : ''}" onclick="toggleSeen(${m.id})">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <img class="movie-poster" src="${m.poster || '[https://via.placeholder.com/92x138?text=Bild](https://via.placeholder.com/92x138?text=Bild)'}" alt="">
+          <div class="movie-details">
+            <div class="movie-title">${m.title}</div>
+            <div class="movie-meta">${m.year || ''} ${m.type ? '• ' + m.type : ''}</div>
+          </div>
+          <button class="btn-delete" onclick="deleteMovie(${m.id})"><i class="fa-solid fa-trash"></i></button>
+        `;
+        listDiv.appendChild(card);
+      });
+    }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(movies));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = "cinetracker_backup.json";
+      a.click();
+    }
+
+    function importData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+          movies = JSON.parse(event.target.result);
+          saveMovies();
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    renderList();
+  </script>
 </body>
 </html>
