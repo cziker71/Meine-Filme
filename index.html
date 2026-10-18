@@ -297,7 +297,7 @@
             background-position: 12px center;
         }
 
-        /* Karten mit detaillierter Ansicht */
+        /* Karten */
         .grid {
             display: flex;
             flex-direction: column;
@@ -551,7 +551,7 @@
             <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: Münster...)">
             <input type="text" id="newGenre" placeholder="Genre (z.B. Krimi / Komödie)">
             <input type="text" id="newYear" placeholder="Jahr (z.B. 2026)">
-            <input type="text" id="newCast" placeholder="Schauspieler / Ermittler (z.B. Axel Prahl, Jan Josef Liefers)">
+            <input type="text" id="newCast" placeholder="Schauspieler / Ermittler">
             <textarea id="newOverview" rows="3" placeholder="Handlung / Beschreibung"></textarea>
             <input type="text" id="newPoster" placeholder="Bild-URL / Poster-Link (optional)">
             <select id="newTab">
@@ -568,7 +568,9 @@
     <script>
         let currentTab = 'watchlist';
         let searchTimeout = null;
-        const TMDB_API_KEY = '15d2ea6d0dc1d476efb279268b376468';
+        
+        // Deinen persönlichen TMDB API-Schlüssel eingefügt:
+        const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
             { 
