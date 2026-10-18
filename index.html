@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medien-Archiv</title>
+    <title>CineTracker</title>
     <style>
         :root {
             --bg-color: #0d1117;
@@ -13,11 +13,8 @@
             --primary-hover: #794bc4;
             --text-color: #f0f6fc;
             --text-secondary: #8b949e;
-            --badge-tatort: #3b232a;
-            --badge-tatort-text: #ff7b72;
-            --status-gesehen: #113825;
-            --status-gesehen-text: #3fb950;
             --border-color: #30363d;
+            --accent-green: #238636;
         }
 
         body {
@@ -38,144 +35,227 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .header-title-area {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         .app-icon {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, #a855f7, #6366f1);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
             box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
         }
 
-        h1 {
-            font-size: 1.5rem;
+        .header h1 {
+            font-size: 1.4rem;
             margin: 0;
-            color: var(--text-color);
             font-weight: 700;
         }
 
-        .add-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            font-size: 24px;
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 2px 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
+            font-size: 15px;
             transition: background-color 0.2s;
         }
 
-        .add-btn:hover {
-            background-color: var(--primary-hover);
+        .icon-btn:hover {
+            background-color: var(--border-color);
         }
 
-        /* Suchleiste */
-        .search-box {
-            width: 100%;
-            padding: 14px 16px;
-            padding-left: 45px;
-            font-size: 0.95rem;
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-color);
-            margin-bottom: 16px;
-            box-sizing: border-box;
-            outline: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%238b949e' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: 16px center;
-        }
-
-        .search-box:focus {
-            border-color: var(--primary-color);
-        }
-
-        /* Filter Chips */
-        .filter-scroll {
+        /* Gimmick-Leiste (Zufall & Teilen) */
+        .gimmick-bar {
             display: flex;
             gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 8px;
             margin-bottom: 16px;
-            scrollbar-width: none;
-        }
-        .filter-scroll::-webkit-scrollbar {
-            display: none;
         }
 
-        .filter-chip {
+        .gimmick-btn {
+            flex: 1;
             background-color: var(--surface-color);
-            color: var(--text-secondary);
             border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
             cursor: pointer;
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             transition: all 0.2s;
         }
 
-        .filter-chip.active {
+        .gimmick-btn:hover {
+            border-color: var(--primary-color);
+            background-color: var(--surface-card);
+        }
+
+        /* Such- und Hinzufügen-Box */
+        .add-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .add-card h3 {
+            font-size: 0.9rem;
+            margin: 0 0 8px 0;
+            color: var(--text-color);
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .add-input {
+            width: 100%;
+            padding: 11px 14px;
+            padding-left: 38px;
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .add-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .add-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding-bottom: 10px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab.active {
+            color: var(--text-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .tab-badge {
+            background-color: var(--surface-card);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .tab.active .tab-badge {
             background-color: var(--primary-color);
             color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 8px rgba(138, 92, 246, 0.3);
         }
 
-        /* Controls Row */
-        .controls-row {
+        /* Filter und Suchleiste für Listen */
+        .filter-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 8px;
             margin-bottom: 16px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
         }
 
-        .status-select {
+        .list-search {
+            flex: 1;
+            padding: 10px 14px;
+            padding-left: 36px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b949e' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+        }
+
+        .filter-select {
             background-color: var(--surface-color);
             color: var(--text-color);
             border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 0 12px;
+            border-radius: 10px;
             font-size: 0.85rem;
             outline: none;
             cursor: pointer;
         }
 
-        .reset-link {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .reset-link:hover {
-            color: var(--text-color);
-        }
-
-        /* Media Card Grid */
+        /* Medien Karten */
         .grid {
             display: flex;
             flex-direction: column;
@@ -184,89 +264,114 @@
 
         .card {
             background-color: var(--surface-card);
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 12px;
             border: 1px solid var(--border-color);
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            gap: 12px;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        /* Checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .custom-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
-            background-color: var(--badge-tatort);
-            color: var(--badge-tatort-text);
+            background-color: var(--surface-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
         }
 
-        .year {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .checkbox-container input:checked + .custom-checkbox {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
-        .card-title {
-            font-size: 1.1rem;
+        .checkbox-container input:checked + .custom-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 13px;
             font-weight: bold;
-            margin: 0;
+        }
+
+        .card-poster {
+            width: 42px;
+            height: 58px;
+            background-color: #262c36;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .card-info h4 {
+            margin: 0 0 3px 0;
+            font-size: 0.95rem;
             color: var(--text-color);
-            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .genre {
-            font-size: 0.85rem;
+        .card-info p {
+            margin: 0;
+            font-size: 0.78rem;
             color: var(--text-secondary);
         }
 
-        .actors {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card-footer-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 4px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .rating {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #e3b341;
+        .card-actions {
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .status-badge {
-            background-color: var(--status-gesehen);
-            color: var(--status-gesehen-text);
-            font-size: 0.75rem;
-            padding: 4px 10px;
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 15px;
+            padding: 6px;
             border-radius: 6px;
-            font-weight: 500;
+        }
+        .action-icon-btn:hover {
+            color: var(--text-color);
+            background-color: rgba(255,255,255,0.05);
+        }
+        .action-icon-btn.delete:hover {
+            color: #ff7b72;
+            background-color: rgba(255,123,114,0.1);
         }
 
-        /* Modal für neuen Eintrag */
-        .modal {
+        /* Zufalls-Modal oder Banner */
+        #randomModal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
+            background-color: rgba(0,0,0,0.75);
             justify-content: center;
             align-items: center;
             padding: 16px;
@@ -274,56 +379,22 @@
             z-index: 100;
         }
 
-        .modal-content {
+        .modal-card {
             background-color: var(--surface-card);
             border: 1px solid var(--border-color);
-            padding: 20px;
+            padding: 24px;
             border-radius: 16px;
             width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            max-width: 350px;
+            text-align: center;
         }
 
-        .modal-content h3 {
-            margin: 0 0 10px 0;
+        .modal-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
         }
 
-        .modal-content input, .modal-content select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            box-sizing: border-box;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .modal-buttons button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-cancel {
-            background-color: var(--surface-color);
-            color: var(--text-secondary);
-        }
-
-        .btn-save {
-            background-color: var(--primary-color);
-            color: white;
-        }
+        #fileInput { display: none; }
     </style>
 </head>
 <body>
@@ -331,213 +402,257 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-title-area">
+            <div class="header-left">
                 <div class="app-icon">🎬</div>
-                <h1>Medien-Archiv</h1>
+                <div>
+                    <h1>CineTracker</h1>
+                    <p>Meine Film-Sammlung</p>
+                </div>
             </div>
-            <button class="add-btn" onclick="openModal()">+</button>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="exportData()" title="Backup exportieren">📥</button>
+                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup importieren">📤</button>
+                <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+            </div>
         </div>
 
-        <!-- Suchleiste -->
-        <input type="text" id="searchInput" class="search-box" placeholder="Suchen nach Titel, Ermittlern, Schauspi..." onkeyup="filterMedia()">
-
-        <!-- Filter Chips -->
-        <div class="filter-scroll">
-            <button class="filter-chip active" onclick="setFilter('Alle', this)">Alle</button>
-            <button class="filter-chip" onclick="setFilter('Tatort', this)">Tatort</button>
-            <button class="filter-chip" onclick="setFilter('Polizeiruf 110', this)">Polizeiruf 110</button>
-            <button class="filter-chip" onclick="setFilter('Filme', this)">Filme</button>
-            <button class="filter-chip" onclick="setFilter('Serien', this)">Serien</button>
+        <!-- Gimmicks: Zufall & Teilen -->
+        <div class="gimmick-bar">
+            <button class="gimmick-btn" onclick="pickRandomMovie()">🎲 Was gucken?</button>
+            <button class="gimmick-btn" onclick="shareList()">📋 Liste kopieren</button>
         </div>
 
-        <!-- Controls Row -->
-        <div class="controls-row">
-            <div>Einträge angezeigt: <span id="countDisplay">0</span></div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <select id="statusFilter" class="status-select" onchange="filterMedia()">
-                    <option value="Alle Status">Alle Status</option>
-                    <option value="Gesehen">Gesehen</option>
-                    <option value="Ungesehen">Ungesehen</option>
-                </select>
-                <button class="reset-link" onclick="resetDatabase()">🔄 Zurücksetzen</button>
+        <!-- Neuen Film Hinzufügen Box -->
+        <div class="add-card">
+            <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
+            <div class="input-wrapper">
+                <span class="input-icon">➕</span>
+                <input type="text" id="quickInput" class="add-input" placeholder="Titel eingeben (z.B. Tatort, Interstellar...)" onkeydown="if(event.key === 'Enter') addNewMovie()">
             </div>
+            <p class="add-hint">Namen eintippen und Enter drücken zum Speichern.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('watchlist', this)">
+                Möchte ich sehen <span class="tab-badge" id="badgeWatchlist">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('watched', this)">
+                Bereits gesehen <span class="tab-badge" id="badgeWatched">0</span>
+            </button>
+        </div>
+
+        <!-- Filter und Suchleiste (Funktioniert jetzt in BEIDEN Tabs!) -->
+        <div class="filter-row">
+            <input type="text" id="listSearch" class="list-search" placeholder="In aktueller Liste suchen..." onkeyup="renderList()">
+            <select id="genreFilter" class="filter-select" onchange="renderList()">
+                <option value="Alle">Alle Genres</option>
+                <option value="Krimi">Krimi / Tatort</option>
+                <option value="Sci-Fi">Sci-Fi / Thriller</option>
+                <option value="Drama">Drama</option>
+            </select>
         </div>
 
         <!-- Medien Liste -->
         <div id="mediaGrid" class="grid">
-            <!-- Dynamisch generierte Karten -->
+            <!-- Dynamische Karten -->
         </div>
     </div>
 
-    <!-- Modal zum Hinzufügen -->
-    <div id="addModal" class="modal">
-        <div class="modal-content">
-            <h3>Neuen Eintrag hinzufügen</h3>
-            <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: ...)">
-            <select id="newType">
-                <option value="Tatort">Tatort</option>
-                <option value="Polizeiruf 110">Polizeiruf 110</option>
-                <option value="Filme">Film</option>
-                <option value="Serien">Serie</option>
-            </select>
-            <input type="text" id="newGenre" placeholder="Genre (z.B. Krimi / Komödie)">
-            <input type="text" id="newActors" placeholder="Ermittler / Schauspieler">
-            <input type="text" id="newYear" placeholder="Jahr (z.B. 2024)">
-            <input type="text" id="newRating" placeholder="Bewertung (z.B. 8.7)">
-            <select id="newStatus">
-                <option value="Gesehen">Gesehen</option>
-                <option value="Ungesehen">Ungesehen</option>
-            </select>
-            <div class="modal-buttons">
-                <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
-                <button class="btn-save" onclick="addMedia()">Speichern</button>
-            </div>
+    <!-- Zufalls-Auswahl Pop-up -->
+    <div id="randomModal" onclick="closeRandomModal()">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h3>Dein Filmtipp für heute:</h3>
+            <p id="randomMovieText" style="font-size: 1.1rem; font-weight: bold; margin: 15px 0;"></p>
+            <button class="gimmick-btn" style="width: 100%; justify-content: center; background-color: var(--primary-color); border: none; color: white;" onclick="closeRandomModal()">Super, den schaue ich!</button>
         </div>
     </div>
 
     <script>
-        // Standard-Datenbank mit vielen Titeln
-        const defaultDatabase = [
-            { id: 1, title: "Tatort: Münster - Der Mann, der lacht", type: "Tatort", genre: "Krimi / Komödie", actors: "👤 Thiel & Boerne (Axel Prahl, Jan Josef Liefers)", year: "2024", rating: "8.7", status: "Gesehen" },
-            { id: 2, title: "Tatort: Köln - Parasomnia", type: "Tatort", genre: "Krimi", actors: "👤 Ballauf & Schenk (Klaus J. Behrendt, Dietmar Bär)", year: "2024", rating: "8.2", status: "Gesehen" },
-            { id: 3, title: "Polizeiruf 110: Rostock - Sabine", type: "Polizeiruf 110", genre: "Krimi", actors: "👤 Bukow & König (Charly Hübner, Anneke Kim Sarnau)", year: "2021", rating: "8.9", status: "Gesehen" },
-            { id: 4, title: "Inception", type: "Filme", genre: "Sci-Fi / Thriller", actors: "👤 Leonardo DiCaprio, Joseph Gordon-Levitt", year: "2010", rating: "8.8", status: "Gesehen" },
-            { id: 5, title: "Breaking Bad", type: "Serien", genre: "Drama / Thriller", actors: "👤 Bryan Cranston, Aaron Paul", year: "2008", rating: "9.5", status: "Gesehen" },
-            { id: 6, title: "Tatort: Wien - Azra", type: "Tatort", genre: "Krimi", actors: "👤 Moritz Eisner & Bibi Fellner", year: "2023", rating: "8.0", status: "Ungesehen" },
-            { id: 7, title: "Interstellar", type: "Filme", genre: "Sci-Fi / Abenteuer", actors: "👤 Matthew McConaughey, Anne Hathaway", year: "2014", rating: "8.7", status: "Gesehen" },
-            { id: 8, title: "Polizeiruf 110: Magdeburg - Der Tag wird kommen", type: "Polizeiruf 110", genre: "Krimi", actors: "👤 Doreen Brasch (Claudia Michelsen)", year: "2023", rating: "8.3", status: "Ungesehen" },
-            { id: 9, title: "Dark", type: "Serien", genre: "Mystery / Sci-Fi", actors: "👤 Louis Hofmann, Oliver Masucci", year: "2017", rating: "8.7", status: "Gesehen" },
-            { id: 10, title: "Sherlock", type: "Serien", genre: "Krimi / Drama", actors: "👤 Benedict Cumberbatch, Martin Freeman", year: "2010", rating: "9.1", status: "Gesehen" }
+        let currentTab = 'watchlist';
+
+        let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
+            { id: 1, title: "Interstellar", year: "2014", genre: "Sci-Fi", tab: "watchlist", poster: "🌌", selected: false },
+            { id: 2, title: "Tatort: Münster - Schwanensee", year: "2024", genre: "Krimi", tab: "watchlist", poster: "🕵️‍♂️", selected: false },
+            { id: 3, title: "Inception", year: "2010", genre: "Sci-Fi", tab: "watched", poster: "🌀", selected: false },
+            { id: 4, title: "Polizeiruf 110: Rostock", year: "2021", genre: "Krimi", tab: "watched", poster: "🚓", selected: false }
         ];
 
-        let currentCategory = "Alle";
-
-        // Laden aus dem lokalen Browser-Speicher oder Standard nutzen
-        let mediaDatabase = JSON.parse(localStorage.getItem('mediaArchiveData')) || defaultDatabase;
-
-        function saveToLocalStorage() {
-            localStorage.setItem('mediaArchiveData', JSON.stringify(mediaDatabase));
+        function saveData() {
+            localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
         }
 
-        function displayMedia(items) {
-            const grid = document.getElementById('mediaGrid');
-            grid.innerHTML = '';
-            document.getElementById('countDisplay').textContent = items.length;
+        function switchTab(tabName, element) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            renderList();
+        }
 
-            if (items.length === 0) {
+        function addNewMovie() {
+            const input = document.getElementById('quickInput');
+            const titleText = input.value.trim();
+            if (!titleText) return;
+
+            let detectedGenre = "Film / Serie";
+            let posterIcon = "🎬";
+            const lower = titleText.toLowerCase();
+            if (lower.includes('tatort') || lower.includes('polizeiruf') || lower.includes('krimi')) {
+                detectedGenre = "Krimi";
+                posterIcon = "🕵️‍♂️";
+            } else if (lower.includes('sci-fi') || lower.includes('interstellar') || lower.includes('inception')) {
+                detectedGenre = "Sci-Fi";
+                posterIcon = "🌌";
+            }
+
+            const newItem = {
+                id: Date.now(),
+                title: titleText,
+                year: "2026",
+                genre: detectedGenre,
+                tab: currentTab,
+                poster: posterIcon,
+                selected: false
+            };
+
+            mediaDatabase.unshift(newItem);
+            saveData();
+            input.value = '';
+            renderList();
+        }
+
+        function toggleSelect(id) {
+            const item = mediaDatabase.find(i => i.id === id);
+            if (item) {
+                item.selected = !item.selected;
+                saveData();
+            }
+        }
+
+        function deleteItem(id) {
+            mediaDatabase = mediaDatabase.filter(item => item.id !== id);
+            saveData();
+            renderList();
+        }
+
+        function toggleTabStatus(id) {
+            const item = mediaDatabase.find(i => i.id === id);
+            if (item) {
+                item.tab = item.tab === 'watchlist' ? 'watched' : 'watchlist';
+                saveData();
+                renderList();
+            }
+        }
+
+        function renderList() {
+            const query = document.getElementById('listSearch').value.toLowerCase();
+            const genreVal = document.getElementById('genreFilter').value;
+            const grid = document.getElementById('mediaGrid');
+            
+            const watchlistCount = mediaDatabase.filter(i => i.tab === 'watchlist').length;
+            const watchedCount = mediaDatabase.filter(i => i.tab === 'watched').length;
+            document.getElementById('badgeWatchlist').textContent = watchlistCount;
+            document.getElementById('badgeWatched').textContent = watchedCount;
+
+            const filtered = mediaDatabase.filter(item => {
+                const matchesTab = item.tab === currentTab;
+                const matchesSearch = item.title.toLowerCase().includes(query) || item.genre.toLowerCase().includes(query);
+                const matchesGenre = (genreVal === 'Alle') || item.genre.toLowerCase().includes(genreVal.toLowerCase());
+                return matchesTab && matchesSearch && matchesGenre;
+            });
+
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
                 grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">Keine Einträge gefunden.</p>';
                 return;
             }
 
-            items.forEach(item => {
+            filtered.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                
-                let badgeStyle = '';
-                if (item.type === 'Polizeiruf 110') {
-                    badgeStyle = 'background-color: #262137; color: #a371f7;';
-                } else if (item.type === 'Filme') {
-                    badgeStyle = 'background-color: #1b2e3c; color: #58a6ff;';
-                } else if (item.type === 'Serien') {
-                    badgeStyle = 'background-color: #382b13; color: #f0883e;';
-                }
-
                 card.innerHTML = `
-                    <div class="card-header-row">
-                        <span class="badge" style="${badgeStyle}">${item.type}</span>
-                        <span class="year">${item.year}</span>
+                    <div class="card-left">
+                        <label class="checkbox-container">
+                            <input type="checkbox" ${item.selected ? 'checked' : ''} onclick="toggleSelect(${item.id})">
+                            <span class="custom-checkbox"></span>
+                        </label>
+                        <div class="card-poster">${item.poster}</div>
+                        <div class="card-info">
+                            <h4>${item.title}</h4>
+                            <p>${item.year} &bull; ${item.genre}</p>
+                        </div>
                     </div>
-                    <h3 class="card-title">${item.title}</h3>
-                    <div class="genre">${item.genre}</div>
-                    <div class="actors">${item.actors}</div>
-                    <div class="card-footer-row">
-                        <div class="rating">⭐ ${item.rating}</div>
-                        <span class="status-badge">${item.status}</span>
+                    <div class="card-actions">
+                        <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="In anderen Ordner verschieben">🔄</button>
+                        <button class="action-icon-btn delete" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        function setFilter(category, element) {
-            currentCategory = category;
-            document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
-            element.classList.add('active');
-            filterMedia();
-        }
-
-        function filterMedia() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const statusVal = document.getElementById('statusFilter').value;
-
-            const filtered = mediaDatabase.filter(item => {
-                const matchesCategory = (currentCategory === 'Alle') || (item.type === currentCategory);
-                const matchesStatus = (statusVal === 'Alle Status') || (item.status === statusVal);
-                const matchesSearch = item.title.toLowerCase().includes(query) || 
-                                      item.genre.toLowerCase().includes(query) || 
-                                      item.actors.toLowerCase().includes(query);
-                return matchesCategory && matchesStatus && matchesSearch;
-            });
-
-            displayMedia(filtered);
-        }
-
-        function openModal() {
-            document.getElementById('addModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('addModal').style.display = 'none';
-        }
-
-        function addMedia() {
-            const title = document.getElementById('newTitle').value;
-            const type = document.getElementById('newType').value;
-            const genre = document.getElementById('newGenre').value;
-            const actors = document.getElementById('newActors').value;
-            const year = document.getElementById('newYear').value;
-            const rating = document.getElementById('newRating').value;
-            const status = document.getElementById('newStatus').value;
-
-            if (!title) {
-                alert('Bitte geben Sie mindestens einen Titel ein.');
+        // Gimmick: Zufälliger Film aus der aktiven Liste
+        function pickRandomMovie() {
+            const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
+            if (activeItems.length === 0) {
+                alert('Keine Filme in dieser Liste vorhanden!');
                 return;
             }
-
-            const newItem = {
-                id: Date.now(),
-                title: title,
-                type: type,
-                genre: genre || 'Allgemein',
-                actors: actors ? '👤 ' + actors : '👤 Unbekannt',
-                year: year || '2026',
-                rating: rating || '8.0',
-                status: status
-            };
-
-            mediaDatabase.unshift(newItem);
-            saveToLocalStorage();
-            filterMedia();
-            closeModal();
-
-            // Felder leeren
-            document.getElementById('newTitle').value = '';
-            document.getElementById('newGenre').value = '';
-            document.getElementById('newActors').value = '';
-            document.getElementById('newYear').value = '';
-            document.getElementById('newRating').value = '';
+            const randomItem = activeItems[Math.floor(Math.random() * activeItems.length)];
+            document.getElementById('randomMovieText').textContent = `${randomItem.poster} ${randomItem.title} (${randomItem.year})`;
+            document.getElementById('randomModal').style.display = 'flex';
         }
 
-        function resetDatabase() {
-            if (confirm('Möchten Sie die Datenbank auf die Standardwerte zurücksetzen?')) {
-                mediaDatabase = [...defaultDatabase];
-                saveToLocalStorage();
-                filterMedia();
+        function closeRandomModal() {
+            document.getElementById('randomModal').style.display = 'none';
+        }
+
+        // Gimmick: Liste als Text teilen
+        function shareList() {
+            const activeItems = mediaDatabase.filter(i => i.tab === currentTab);
+            if (activeItems.length === 0) {
+                alert('Die Liste ist leer!');
+                return;
+            }
+            const listTitle = currentTab === 'watchlist' ? 'Meine Watchlist:' : 'Bereits gesehen:';
+            let text = `${listTitle}\n` + activeItems.map(i => `- ${i.title} (${i.year})`).join('\n');
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Liste wurde in die Zwischenablage kopiert! Du kannst sie jetzt z.B. in WhatsApp einfügen.');
+            }).catch(() => {
+                alert('Konnte nicht kopiert werden.');
+            });
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(mediaDatabase, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "cinetracker_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function (e) {
+                    try {
+                        mediaDatabase = JSON.parse(e.target.result);
+                        saveData();
+                        renderList();
+                        alert('Daten erfolgreich importiert!');
+                    } catch (error) {
+                        alert('Fehler beim Lesen der Datei.');
+                    }
+                };
             }
         }
 
-        // Initiale Anzeige beim Start
-        filterMedia();
+        renderList();
     </script>
 </body>
 </html>
