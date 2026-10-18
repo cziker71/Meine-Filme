@@ -393,9 +393,6 @@
             font-size: 0.82rem;
             color: var(--text-secondary);
             margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .card-overview {
@@ -534,13 +531,37 @@
             </button>
         </div>
 
-        <!-- Suchleiste (Sucht nach Titeln, Schauspielern & Genre) -->
+        <!-- Suchleiste -->
         <div class="filter-row">
             <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen (Titel, Darsteller...)..." onkeyup="renderList()">
         </div>
 
         <!-- Medien Liste -->
         <div id="mediaGrid" class="grid"></div>
+    </div>
+
+    <!-- Modal für Filminfos (ℹ️) -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                <img id="infoPoster" src="" style="width: 80px; height: 115px; border-radius: 8px; object-fit: cover; background-color: #262c36;" alt="Poster">
+                <div>
+                    <h3 id="infoTitle" style="margin: 0 0 6px 0; font-size: 1.1rem; color: var(--text-color);"></h3>
+                    <p id="infoMeta" style="margin: 0 0 6px 0; font-size: 0.85rem; color: var(--primary-color);"></p>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Handlung</h4>
+                <p id="infoOverview" style="margin: 0; font-size: 0.88rem; line-height: 1.4; color: var(--text-color);"></p>
+            </div>
+            <div>
+                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Hauptdarsteller</h4>
+                <p id="infoCast" style="margin: 0; font-size: 0.88rem; color: var(--text-color);"></p>
+            </div>
+            <div class="modal-buttons" style="margin-top: 15px;">
+                <button class="btn-save" onclick="closeInfoModal()" style="width: 100%;">Schließen</button>
+            </div>
+        </div>
     </div>
 
     <!-- Modal zum Bearbeiten & Hinzufügen -->
@@ -568,8 +589,6 @@
     <script>
         let currentTab = 'watchlist';
         let searchTimeout = null;
-        
-        // Deinen persönlichen TMDB API-Schlüssel eingefügt:
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
@@ -593,17 +612,6 @@
                 poster: "🕵️‍♂️", 
                 cast: "Thiel & Boerne (Axel Prahl, Jan Josef Liefers)",
                 overview: "In einer Psychiatrie am Schwanensee wird eine Leiche am Beckenboden gefunden. Frank Thiel und Prof. Boerne ermitteln.",
-                selected: false 
-            },
-            { 
-                id: 3, 
-                title: "Inception", 
-                year: "2010", 
-                genre: "Sci-Fi / Thriller", 
-                tab: "watched", 
-                poster: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", 
-                cast: "Leonardo DiCaprio, Joseph Gordon-Levitt, Elliot Page",
-                overview: "Ein Dieb, der Geheimnisse aus den Träumen von Menschen stiehlt, erhält die Chance auf eine saubere Weste, wenn er eine Idee einpflanzt.",
                 selected: false 
             }
         ];
@@ -674,11 +682,11 @@
             fetch(`https://api.themoviedb.org/3/${endpoint}/${id}/credits?api_key=${TMDB_API_KEY}&language=de-DE`)
                 .then(res => res.json())
                 .then(castData => {
-                    const castList = castData.cast ? castData.cast.slice(0, 4).map(c => c.name).join(', ') : 'Unbekannt';
+                    const castList = castData.cast && castData.cast.length > 0 ? castData.cast.slice(0, 4).map(c => c.name).join(', ') : 'Besetzung nicht verfügbar';
                     addFoundMovie(title, year, genre, poster, overview, castList);
                 })
                 .catch(() => {
-                    addFoundMovie(title, year, genre, poster, overview, 'Unbekannt');
+                    addFoundMovie(title, year, genre, poster, overview, 'Besetzung nicht verfügbar');
                 });
         }
 
@@ -760,7 +768,7 @@
             const editId = document.getElementById('editId').value;
             const genre = document.getElementById('newGenre').value.trim() || 'Film / Serie';
             const year = document.getElementById('newYear').value.trim() || '2026';
-            const cast = document.getElementById('newCast').value.trim() || 'Unbekannt';
+            const cast = document.getElementById('newCast').value.trim() || 'Nicht angegeben';
             const overview = document.getElementById('newOverview').value.trim() || 'Keine Beschreibung.';
             const posterInput = document.getElementById('newPoster').value.trim();
             const tab = document.getElementById('newTab').value;
@@ -793,6 +801,30 @@
             saveData();
             closeModal();
             renderList();
+        }
+
+        function showInfo(id) {
+            const item = mediaDatabase.find(i => i.id === id);
+            if (!item) return;
+
+            document.getElementById('infoTitle').textContent = item.title;
+            document.getElementById('infoMeta').textContent = `${item.year} \u2022 ${item.genre}`;
+            document.getElementById('infoOverview').textContent = item.overview || 'Keine Handlung verfügbar.';
+            document.getElementById('infoCast').textContent = item.cast || 'Keine Angaben';
+
+            const posterImg = document.getElementById('infoPoster');
+            if (item.poster.startsWith('http')) {
+                posterImg.src = item.poster;
+                posterImg.style.display = 'block';
+            } else {
+                posterImg.style.display = 'none';
+            }
+
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').style.display = 'none';
         }
 
         function toggleSelect(id) {
@@ -860,6 +892,7 @@
                             </div>
                         </div>
                         <div class="card-actions">
+                            <button class="action-icon-btn" onclick="showInfo(${item.id})" title="Details / Handlung anzeigen">ℹ️</button>
                             <button class="action-icon-btn" onclick="openModal(${item.id})" title="Bearbeiten">✏️</button>
                             <button class="action-icon-btn" onclick="toggleTabStatus(${item.id})" title="Verschieben">🔄</button>
                             <button class="action-icon-btn" onclick="deleteItem(${item.id})" title="Löschen">🗑️</button>
