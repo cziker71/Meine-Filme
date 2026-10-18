@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CineTracker - Meine Film-Sammlung</title>
-  <link href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css)" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0f172a;
@@ -220,7 +220,7 @@
       font-size: 11px;
     }
 
-    /* Controls (In Liste suchen / Filter) */
+    /* Controls (In Liste suchen) */
     .list-controls {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -230,16 +230,6 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-    }
-
-    .list-controls select {
-      background: var(--bg-input);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
     }
 
     /* Movie Cards */
@@ -378,7 +368,8 @@
         return;
       }
 
-      const url = `[https://api.themoviedb.org/3/search/multi?api_key=$](https://api.themoviedb.org/3/search/multi?api_key=$){API_KEY}&language=de-DE&query=${encodeURIComponent(query)}`;
+      // Korrigiert auf 'search/multi' für Filme UND Serien (inkl. Tatort & Achtsam morden)
+      const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=de-DE&query=${encodeURIComponent(query)}`;
       
       try {
         const res = await fetch(url);
@@ -393,8 +384,8 @@
           const title = item.title || item.name;
           const year = (item.release_date || item.first_air_date || '').substring(0, 4);
           const poster = item.poster_path 
-            ? `[https://image.tmdb.org/t/p/w92$](https://image.tmdb.org/t/p/w92$){item.poster_path}`
-            : '[https://via.placeholder.com/92x138?text=Kein+Bild](https://via.placeholder.com/92x138?text=Kein+Bild)';
+            ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
+            : 'https://via.placeholder.com/92x138?text=Kein+Bild';
 
           const el = document.createElement('div');
           el.className = 'result-item';
@@ -416,7 +407,7 @@
     function addMovie(item) {
       const title = item.title || item.name;
       const year = (item.release_date || item.first_air_date || '').substring(0, 4);
-      const poster = item.poster_path ? `[https://image.tmdb.org/t/p/w185$](https://image.tmdb.org/t/p/w185$){item.poster_path}` : '';
+      const poster = item.poster_path ? `https://image.tmdb.org/t/p/w185${item.poster_path}` : '';
 
       if (!movies.some(m => m.id === item.id)) {
         movies.push({
@@ -473,7 +464,7 @@
           <div class="action-check ${m.seen ? 'checked' : ''}" onclick="toggleSeen(${m.id})">
             <i class="fa-solid fa-check"></i>
           </div>
-          <img class="movie-poster" src="${m.poster || '[https://via.placeholder.com/92x138?text=Bild](https://via.placeholder.com/92x138?text=Bild)'}" alt="">
+          <img class="movie-poster" src="${m.poster || 'https://via.placeholder.com/92x138?text=Bild'}" alt="">
           <div class="movie-details">
             <div class="movie-title">${m.title}</div>
             <div class="movie-meta">${m.year || ''} ${m.type ? '• ' + m.type : ''}</div>
