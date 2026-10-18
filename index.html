@@ -220,16 +220,13 @@
       font-size: 11px;
     }
 
-    /* Controls (In Liste suchen) */
+    /* Controls */
     .list-controls {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     /* Movie Cards */
@@ -239,15 +236,19 @@
       gap: 12px;
     }
 
-    .movie-card {
+    .movie-card-wrapper {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .movie-card {
       padding: 12px;
       display: flex;
       gap: 12px;
       align-items: center;
-      position: relative;
+      cursor: pointer;
     }
 
     .movie-poster {
@@ -290,6 +291,22 @@
     }
 
     .btn-delete:hover { color: var(--danger); }
+
+    /* Ausklappbare Handlung/Info */
+    .movie-overview {
+      display: none;
+      padding: 0 12px 12px 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-top: 1px dashed var(--border);
+      margin-top: 4px;
+      padding-top: 8px;
+    }
+
+    .movie-card-wrapper.open .movie-overview {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -368,7 +385,6 @@
         return;
       }
 
-      // Korrigiert auf 'search/multi' für Filme UND Serien (inkl. Tatort & Achtsam morden)
       const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=de-DE&query=${encodeURIComponent(query)}`;
       
       try {
@@ -408,6 +424,7 @@
       const title = item.title || item.name;
       const year = (item.release_date || item.first_air_date || '').substring(0, 4);
       const poster = item.poster_path ? `https://image.tmdb.org/t/p/w185${item.poster_path}` : '';
+      const overview = item.overview || 'Keine Beschreibung verfügbar.';
 
       if (!movies.some(m => m.id === item.id)) {
         movies.push({
@@ -416,6 +433,7 @@
           year: year,
           type: item.media_type === 'tv' ? 'Serie' : 'Film',
           poster: poster,
+          overview: overview,
           seen: false
         });
         saveMovies();
@@ -424,7 +442,8 @@
       document.getElementById('searchResults').innerHTML = '';
     }
 
-    function toggleSeen(id) {
+    function toggleSeen(id, event) {
+      event.stopPropagation();
       const movie = movies.find(m => m.id === id);
       if (movie) {
         movie.seen = !movie.seen;
@@ -432,9 +451,14 @@
       }
     }
 
-    function deleteMovie(id) {
+    function deleteMovie(id, event) {
+      event.stopPropagation();
       movies = movies.filter(m => m.id !== id);
       saveMovies();
+    }
+
+    function toggleOverview(element) {
+      element.classList.toggle('open');
     }
 
     function renderList() {
@@ -458,20 +482,27 @@
       }
 
       filtered.forEach(m => {
-        const card = document.createElement('div');
-        card.className = 'movie-card';
-        card.innerHTML = `
-          <div class="action-check ${m.seen ? 'checked' : ''}" onclick="toggleSeen(${m.id})">
-            <i class="fa-solid fa-check"></i>
+        const wrapper = document.createElement('div');
+        wrapper.className = 'movie-card-wrapper';
+        wrapper.onclick = () => toggleOverview(wrapper);
+
+        wrapper.innerHTML = `
+          <div class="movie-card">
+            <div class="action-check ${m.seen ? 'checked' : ''}" onclick="toggleSeen(${m.id}, event)">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <img class="movie-poster" src="${m.poster || 'https://via.placeholder.com/92x138?text=Bild'}" alt="">
+            <div class="movie-details">
+              <div class="movie-title">${m.title}</div>
+              <div class="movie-meta">${m.year || ''} ${m.type ? '• ' + m.type : ''} <span style="font-size: 11px; color: var(--primary); margin-left: 6px;">(Details ℹ️)</span></div>
+            </div>
+            <button class="btn-delete" onclick="deleteMovie(${m.id}, event)"><i class="fa-solid fa-trash"></i></button>
           </div>
-          <img class="movie-poster" src="${m.poster || 'https://via.placeholder.com/92x138?text=Bild'}" alt="">
-          <div class="movie-details">
-            <div class="movie-title">${m.title}</div>
-            <div class="movie-meta">${m.year || ''} ${m.type ? '• ' + m.type : ''}</div>
+          <div class="movie-overview">
+            <strong>Handlung:</strong><br>${m.overview || 'Keine Beschreibung vorhanden.'}
           </div>
-          <button class="btn-delete" onclick="deleteMovie(${m.id})"><i class="fa-solid fa-trash"></i></button>
         `;
-        listDiv.appendChild(card);
+        listDiv.appendChild(wrapper);
       });
     }
 
