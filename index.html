@@ -1,11 +1,446 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineTracker</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --surface-card: #1f242d;
+            --primary-color: #8a5cf6;
+            --primary-hover: #794bc4;
+            --text-color: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
+        }
+
+        .header h1 { font-size: 1.4rem; margin: 0; font-weight: 700; }
+        .header p { font-size: 0.85rem; color: var(--text-secondary); margin: 2px 0 0 0; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .icon-btn:hover { background-color: var(--border-color); }
+
+        .add-btn-main {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
+            margin-left: 4px;
+        }
+
+        .gimmick-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+
+        .gimmick-btn {
+            flex: 1;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .add-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .add-card h3 {
+            font-size: 0.85rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper { position: relative; margin-bottom: 6px; }
+
+        .add-input {
+            width: 100%;
+            padding: 12px 14px;
+            padding-left: 40px;
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .add-input:focus { border-color: var(--primary-color); }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .add-hint { font-size: 0.78rem; color: var(--text-secondary); margin: 0; }
+
+        .search-results-popup {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 4px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .search-result-item:hover { background-color: var(--surface-color); }
+
+        .search-result-poster {
+            width: 32px; height: 46px;
+            border-radius: 4px;
+            object-fit: cover;
+            background-color: #262c36;
+        }
+
+        .search-result-info h5 { margin: 0 0 2px 0; font-size: 0.88rem; color: var(--text-color); }
+        .search-result-info p { margin: 0; font-size: 0.75rem; color: var(--text-secondary); }
+
+        .tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding-bottom: 10px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab.active { color: var(--text-color); }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 100%; height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .tab-badge {
+            background-color: var(--surface-card);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .tab.active .tab-badge { background-color: var(--primary-color); color: white; }
+
+        .filter-row { display: flex; gap: 8px; margin-bottom: 16px; }
+
+        .list-search {
+            flex: 1;
+            padding: 10px 14px;
+            padding-left: 36px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b949e' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+        }
+
+        .grid { display: flex; flex-direction: column; gap: 12px; }
+
+        .card {
+            background-color: var(--surface-card);
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-header-line { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .card-main-info { display: flex; align-items: flex-start; gap: 12px; overflow: hidden; flex: 1; }
+
+        .checkbox-container { display: flex; align-items: center; cursor: pointer; margin-top: 4px; }
+        .checkbox-container input { display: none; }
+
+        .custom-checkbox {
+            width: 22px; height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--surface-color);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .checkbox-container input:checked + .custom-checkbox {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-container input:checked + .custom-checkbox::after {
+            content: '✓'; color: white; font-size: 13px; font-weight: bold;
+        }
+
+        .card-poster-img {
+            width: 52px; height: 74px;
+            border-radius: 6px;
+            object-fit: cover;
+            background-color: #262c36;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+        }
+
+        .card-text-details h4 { margin: 0 0 2px 0; font-size: 1rem; color: var(--text-color); line-height: 1.25; }
+        .card-meta { font-size: 0.8rem; color: var(--primary-color); margin-bottom: 4px; font-weight: 500; }
+        .card-actors { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+        .card-overview {
+            font-size: 0.82rem; color: #c9d1d9; margin-top: 4px; line-height: 1.35;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .card-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+        .action-icon-btn {
+            background: none; border: none; color: var(--text-secondary);
+            cursor: pointer; font-size: 15px; padding: 6px; border-radius: 6px;
+        }
+        .action-icon-btn:hover { color: var(--text-color); background-color: rgba(255,255,255,0.05); }
+
+        .modal {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.75);
+            justify-content: center; align-items: center;
+            padding: 16px; box-sizing: border-box; z-index: 100;
+        }
+
+        .modal-content {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            padding: 20px; border-radius: 16px;
+            width: 100%; max-width: 400px;
+            display: flex; flex-direction: column; gap: 12px;
+            max-height: 85vh; overflow-y: auto;
+        }
+
+        .modal-content input, .modal-content select, .modal-content textarea {
+            width: 100%; padding: 10px; border-radius: 8px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color); box-sizing: border-box; outline: none; font-family: inherit;
+        }
+
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+        .modal-buttons button { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-cancel { background-color: var(--surface-color); color: var(--text-secondary); }
+        .btn-save { background-color: var(--primary-color); color: white; }
+
+        #fileInput { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="app-icon">🎬</div>
+                <div>
+                    <h1>CineTracker</h1>
+                    <p>Meine Film-Sammlung</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" onclick="exportData()" title="Backup Exportieren">📥</button>
+                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup Importieren">📤</button>
+                <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
+                <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
+
+        <div class="add-card">
+            <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
+            <div class="input-wrapper">
+                <span class="input-icon">🎬</span>
+                <input type="text" id="quickInput" class="add-input" placeholder="Filmtitel eingeben (z. B. Dune, Tatort...)" oninput="searchOnlineMovies(this.value)" onkeydown="if(event.key === 'Enter') quickAddCustom()">
+            </div>
+            <p class="add-hint">Tippe den Namen ein, um Plakate, Handlung & Schauspieler zu laden.</p>
+            <div id="searchResultsPopup" class="search-results-popup"></div>
+        </div>
+
+        <div class="gimmick-bar">
+            <button class="gimmick-btn" onclick="pickRandomMovie()">🎲 Was gucken?</button>
+            <button class="gimmick-btn" onclick="shareList()">📋 Liste kopieren</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('watchlist', this)">
+                Möchte ich sehen <span class="tab-badge" id="badgeWatchlist">0</span>
+            </button>
+            <button class="tab" onclick="switchTab('watched', this)">
+                Bereits gesehen <span class="tab-badge" id="badgeWatched">0</span>
+            </button>
+        </div>
+
+        <div class="filter-row">
+            <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen (Titel, Darsteller...)..." onkeyup="renderList()">
+        </div>
+
+        <div id="mediaGrid" class="grid"></div>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                <img id="infoPoster" src="" style="width: 80px; height: 115px; border-radius: 8px; object-fit: cover; background-color: #262c36;" alt="Poster">
+                <div>
+                    <h3 id="infoTitle" style="margin: 0 0 6px 0; font-size: 1.1rem; color: var(--text-color);"></h3>
+                    <p id="infoMeta" style="margin: 0 0 6px 0; font-size: 0.85rem; color: var(--primary-color);"></p>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Handlung</h4>
+                <p id="infoOverview" style="margin: 0; font-size: 0.88rem; line-height: 1.4; color: var(--text-color);"></p>
+            </div>
+            <div>
+                <h4 style="margin: 10px 0 4px 0; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase;">Hauptdarsteller</h4>
+                <p id="infoCast" style="margin: 0; font-size: 0.88rem; color: var(--text-color);"></p>
+            </div>
+            <div class="modal-buttons" style="margin-top: 15px;">
+                <button class="btn-save" onclick="closeInfoModal()" style="width: 100%;">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitleText" style="margin: 0;">Neuen Eintrag hinzufügen</h3>
+            <input type="hidden" id="editId">
+            <input type="text" id="newTitle" placeholder="Titel (z.B. Tatort: Münster...)">
+            <input type="text" id="newGenre" placeholder="Genre (z.B. Krimi / Komödie)">
+            <input type="text" id="newYear" placeholder="Jahr (z.B. 2026)">
+            <input type="text" id="newCast" placeholder="Schauspieler / Ermittler">
+            <textarea id="newOverview" rows="3" placeholder="Handlung / Beschreibung"></textarea>
+            <input type="text" id="newPoster" placeholder="Bild-URL / Poster-Link (optional)">
+            <select id="newTab">
+                <option value="watchlist">Möchte ich sehen</option>
+                <option value="watched">Bereits gesehen</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
+                <button class="btn-save" onclick="saveModalEntry()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentTab = 'watchlist';
         let searchTimeout = null;
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
-
-        // Deine JSONbin Zugangsdaten
-        const JSONBIN_API_KEY = '$2a$10$gTEuNP03Ci.mllC3fwupCO0oA2neSflvlIzxb7fgWXekcrRhg.7Im';
-        const JSONBIN_ID = '6ad643fbffd5d16053795506';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
             { 
@@ -23,41 +458,6 @@
 
         function saveData() {
             localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
-            syncToCloud();
-        }
-
-        function syncToCloud() {
-            if (!JSONBIN_API_KEY || !JSONBIN_ID) return;
-            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_API_KEY
-                },
-                body: JSON.stringify(mediaDatabase)
-            }).catch(err => console.log('Cloud-Sync Fehler beim Speichern:', err));
-        }
-
-        function syncFromCloud() {
-            if (!JSONBIN_API_KEY || !JSONBIN_ID) return;
-            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-                headers: {
-                    'X-Master-Key': JSONBIN_API_KEY
-                }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Netzwerk-Antwort war nicht ok');
-                return res.json();
-            })
-            .then(data => {
-                if (data && data.record) {
-                    mediaDatabase = data.record;
-                    localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
-                    renderList();
-                    alert('Erfolgreich aus der Cloud synchronisiert!');
-                }
-            })
-            .catch(err => alert('Cloud-Laden fehlgeschlagen. Bitte prüfe noch einmal den Master-Key und die Bin-ID direkt auf jsonbin.io.'));
         }
 
         function switchTab(tabName, element) {
@@ -383,6 +783,7 @@
             }
         }
 
-        // Beim Start normal lokal laden, damit die App sofort da ist
         renderList();
     </script>
+</body>
+</html>
