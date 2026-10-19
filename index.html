@@ -497,7 +497,7 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="syncWithJsonBin()" title="Mit JSONbin synchronisieren">🔄</button>
+                <button class="icon-btn" onclick="syncWithJsonBin()" title="Mit JSONbin synchronisieren">☁️</button>
                 <button class="icon-btn" onclick="exportData()" title="Backup Exportieren">📥</button>
                 <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup Importieren">📤</button>
                 <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
@@ -592,8 +592,10 @@
         let searchTimeout = null;
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
-        // TRAGE HIER NUR DEINEN JSONBIN MASTER KEY EIN (Die Bin ID erstellt die App beim ersten Klick selbst):
-        const JSONBIN_API_KEY = '$2a$10$eBKbSCxvYu/inmEl.PUSPuWwTTyDXP5l7Xxgp2UPxudijOC2vTcVK';
+        // =========================================================================
+        // TRAGE HIER NUR DEINEN JSONBIN MASTER KEY EIN (z.B. $2a$10$...):
+        // =========================================================================
+        const JSONBIN_API_KEY = 'HIER_DEIN_JSONBIN_MASTER_KEY_EINTRAGEN';
         let jsonBinId = localStorage.getItem('cinetracker_jsonbin_id') || '';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
@@ -635,32 +637,42 @@
                 return;
             }
 
-            // Wenn noch keine ID da ist, erstellen wir sie automatisch über die App
+            // Wenn noch keine Bin ID gespeichert ist, fragen wir kurz oder erstellen automatisch eine neue
             if (!jsonBinId) {
-                fetch('https://api.jsonbin.io/v3/b', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY,
-                        'X-Bin-Private': 'true'
-                    },
-                    body: JSON.stringify(mediaDatabase)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.metadata && data.metadata.id) {
-                        jsonBinId = data.metadata.id;
-                        localStorage.setItem('cinetracker_jsonbin_id', jsonBinId);
-                        alert(`Cloud-Speicher automatisch erstellt!\n\nDeine Bin ID lautet:\n${jsonBinId}\n\n(Trage diese ID auf deinem anderen Gerät ein, wenn du dort dasselbe Konto nutzen möchtest).`);
-                    } else {
-                        alert("Fehler beim Erstellen der Bin.");
-                    }
-                })
-                .catch(() => alert("Netzwerkfehler."));
-                return;
+                const manualId = prompt("Keine Bin ID gefunden.\n\nFalls du schon eine hast, gib sie hier ein. Klicke auf Abbrechen, damit die App automatisch eine neue für dich erstellt:");
+                if (manualId && manualId.trim()) {
+                    jsonBinId = manualId.trim();
+                    localStorage.setItem('cinetracker_jsonbin_id', jsonBinId);
+                    syncWithJsonBin();
+                    return;
+                } else {
+                    // Automatisch eine neue Bin im Account anlegen
+                    fetch('https://api.jsonbin.io/v3/b', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Master-Key': JSONBIN_API_KEY,
+                            'X-Bin-Private': 'true'
+                        },
+                        body: JSON.stringify(mediaDatabase)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.metadata && data.metadata.id) {
+                            jsonBinId = data.metadata.id;
+                            localStorage.setItem('cinetracker_jsonbin_id', jsonBinId);
+                            alert(`Cloud-Bin erfolgreich automatisch erstellt!\n\nDeine Bin ID lautet:\n${jsonBinId}\n\n(Notiere dir diese ID. Auf deinem anderen Gerät kannst du sie eingeben, wenn danach gefragt wird, damit beide Geräte dieselbe Liste nutzen).`);
+                            renderList();
+                        } else {
+                            alert("Fehler beim Erstellen der Bin. Bitte prüfe deinen Master Key.");
+                        }
+                    })
+                    .catch(() => alert("Netzwerkfehler beim Erstellen der Bin."));
+                    return;
+                }
             }
 
-            // Vorhandene Daten laden
+            // Daten von JSONbin laden
             fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}/latest`, {
                 headers: {
                     'X-Master-Key': JSONBIN_API_KEY
@@ -673,12 +685,14 @@
                     localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
                     renderList();
                     alert("Erfolgreich mit JSONbin synchronisiert!");
+                } else {
+                    alert("Keine Daten in dieser Bin gefunden.");
                 }
             })
-            .catch(() => alert("Fehler beim Laden."));
+            .catch(() => alert("Fehler beim Laden. Überprüfe deinen Master Key und die Bin ID."));
         }
 
-        // Beim Start der App automatisch aus der Cloud laden, falls ID vorhanden
+        // Beim Start der App automatisch im Hintergrund die neuesten Daten laden
         window.addEventListener('DOMContentLoaded', () => {
             if (JSONBIN_API_KEY && JSONBIN_API_KEY !== 'HIER_DEIN_JSONBIN_MASTER_KEY_EINTRAGEN' && jsonBinId) {
                 fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}/latest`, {
@@ -963,7 +977,7 @@
                             <div class="card-text-details">
                                 <h4>${item.title}</h4>
                                 <div class="card-meta">${item.year} &bull; ${item.genre}</div>
-                                <div class="card-actors">👤 ${item.cast || 'Unbekannt'}</div>
+                                .<div class="card-actors">👤 ${item.cast || 'Unbekannt'}</div>
                             </div>
                         </div>
                         <div class="card-actions">
@@ -1003,10 +1017,10 @@
             downloadAnchor.remove();
         }
 
-        function importData(event) {
+        function importData(fileEvent) {
             const fileReader = new FileReader();
-            if (event.target.files[0]) {
-                fileReader.readAsText(event.target.files[0], "UTF-8");
+            if (fileEvent.target.files[0]) {
+                fileReader.readAsText(fileEvent.target.files[0], "UTF-8");
                 fileReader.onload = function (e) {
                     try {
                         mediaDatabase = JSON.parse(e.target.result);
