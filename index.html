@@ -497,8 +497,10 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="exportData()" title="Exportieren">📥</button>
-                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Importieren">📤</button>
+                <button class="icon-btn" onclick="syncWithCloud()" title="Mit Cloud synchronisieren">🔄</button>
+                <button class="icon-btn" onclick="setupCloudConfig()" title="Cloud-Einstellungen">☁️</button>
+                <button class="icon-btn" onclick="exportData()" title="Backup Exportieren">📥</button>
+                <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup Importieren">📤</button>
                 <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
                 <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
             </div>
@@ -591,6 +593,10 @@
         let searchTimeout = null;
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
+        // Cloud Konfiguration (JSONbin.io)
+        let cloudBinId = localStorage.getItem('cinetracker_bin_id') || '';
+        let cloudApiKey = localStorage.getItem('cinetracker_api_key') || '';
+
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
             { 
                 id: 1, 
@@ -602,23 +608,114 @@
                 cast: "Matthew McConaughey, Anne Hathaway, Jessica Chastain",
                 overview: "Ein Team von Forschern reist durch ein Wurmloch im Weltraum, um das Überleben der Menschheit auf einem neuen Planeten zu sichern.",
                 selected: false 
-            },
-            { 
-                id: 2, 
-                title: "Tatort: Münster - Schwanensee", 
-                year: "2024", 
-                genre: "Krimi / Komödie", 
-                tab: "watchlist", 
-                poster: "🕵️‍♂️", 
-                cast: "Thiel & Boerne (Axel Prahl, Jan Josef Liefers)",
-                overview: "In einer Psychiatrie am Schwanensee wird eine Leiche am Beckenboden gefunden. Frank Thiel und Prof. Boerne ermitteln.",
-                selected: false 
             }
         ];
 
         function saveData() {
             localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
+            // Automatischer Cloud-Sync im Hintergrund, wenn eingerichtet
+            if (cloudBinId && cloudApiKey) {
+                pushToCloud(false);
+            }
         }
+
+        // Cloud-Setup beim ersten Mal
+        function setupCloudConfig() {
+            const currentKey = prompt("Bitte gib deinen JSONbin.io Master Key (API-Key) ein:", cloudApiKey);
+            if (currentKey !== null) {
+                cloudApiKey = currentKey.trim();
+                localStorage.setItem('cinetracker_api_key', cloudApiKey);
+                
+                const currentBin = prompt("Hast du bereits eine Bin ID? (Leer lassen, um automatisch eine neue zu erstellen):", cloudBinId);
+                if (currentBin !== null && currentBin.trim() !== '') {
+                    cloudBinId = currentBin.trim();
+                    localStorage.setItem('cinetracker_bin_id', cloudBinId);
+                    alert("Cloud erfolgreich verbunden!");
+                    syncWithCloud();
+                } else if (currentBin !== null) {
+                    createNewCloudBin();
+                }
+            }
+        }
+
+        function createNewCloudBin() {
+            if (!cloudApiKey) return alert("Bitte zuerst den API-Key eingeben!");
+            fetch('https://api.jsonbin.io/v3/b', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': cloudApiKey,
+                    'X-Bin-Private': 'true'
+                },
+                body: JSON.stringify(mediaDatabase)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.metadata && data.metadata.id) {
+                    cloudBinId = data.metadata.id;
+                    localStorage.setItem('cinetracker_bin_id', cloudBinId);
+                    alert("Neue Cloud-Datenbank erstellt und verbunden!\n\nDeine Bin ID lautet:\n" + cloudBinId + "\n\n(Trage diese ID einfach auf deinem anderen Gerät über das ☁️-Symbol ein, um denselben Speicher zu nutzen).");
+                } else {
+                    alert("Fehler beim Erstellen der Cloud-Datenbank.");
+                }
+            })
+            .catch(() => alert("Netzwerkfehler beim Verbinden zur Cloud."));
+        }
+
+        function pushToCloud(showAlert = true) {
+            if (!cloudBinId || !cloudApiKey) return;
+            fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': cloudApiKey
+                },
+                body: JSON.stringify(mediaDatabase)
+            }).then(() => {
+                if (showAlert) alert("Erfolgreich mit der Cloud synchronisiert!");
+            }).catch(() => {
+                if (showAlert) alert("Fehler beim Speichern in der Cloud.");
+            });
+        }
+
+        function syncWithCloud() {
+            if (!cloudBinId || !cloudApiKey) {
+                setupCloudConfig();
+                return;
+            }
+            fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}/latest`, {
+                headers: {
+                    'X-Master-Key': cloudApiKey
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.record) {
+                    mediaDatabase = data.record;
+                    saveData();
+                    renderList();
+                    alert("Daten erfolgreich aus der Cloud geladen!");
+                }
+            })
+            .catch(() => alert("Fehler beim Laden aus der Cloud."));
+        }
+
+        // Beim Start der Seite automatisch aus der Cloud aktualisieren, falls eingerichtet
+        window.addEventListener('DOMContentLoaded', () => {
+            if (cloudBinId && cloudApiKey) {
+                fetch(`https://api.jsonbin.io/v3/b/${cloudBinId}/latest`, {
+                    headers: { 'X-Master-Key': cloudApiKey }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.record) {
+                        mediaDatabase = data.record;
+                        localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
+                        renderList();
+                    }
+                }).catch(() => {});
+            }
+        });
 
         function switchTab(tabName, element) {
             currentTab = tabName;
