@@ -355,6 +355,8 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="icon-btn" onclick="syncToCloud()" title="In Cloud speichern">☁️⬆️</button>
+                <button class="icon-btn" onclick="syncFromCloud()" title="Aus Cloud laden">☁️📥</button>
                 <button class="icon-btn" onclick="exportData()" title="Backup Exportieren">📥</button>
                 <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup Importieren">📤</button>
                 <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
@@ -442,6 +444,10 @@
         let searchTimeout = null;
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
+        // Deine JSONbin Zugangsdaten
+        const JSONBIN_API_KEY = '$2a$10$gTEuNP03Ci.mllC3fwupCO0oA2neSflvlIzxb7fgWXekcrRhg.7Im';
+        const JSONBIN_ID = '6ad643fbffd5d16053795506';
+
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
             { 
                 id: 1, 
@@ -458,6 +464,53 @@
 
         function saveData() {
             localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
+        }
+
+        // Manuelles Speichern in die Cloud per Button (☁️⬆️)
+        function syncToCloud() {
+            if (!JSONBIN_API_KEY || !JSONBIN_ID) return alert('Keine Zugangsdaten hinterlegt.');
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_API_KEY
+                },
+                body: JSON.stringify(mediaDatabase)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Fehler beim Speichern');
+                alert('Erfolgreich in der Cloud gespeichert! ☁️');
+            })
+            .catch(err => alert('Cloud-Speichern fehlgeschlagen. Bitte prüfe Master-Key und Bin-ID.'));
+        }
+
+        // Manuelles Laden aus der Cloud per Button (☁️📥)
+        function syncFromCloud() {
+            if (!JSONBIN_API_KEY || !JSONBIN_ID) return alert('Keine Zugangsdaten hinterlegt.');
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+                headers: {
+                    'X-Master-Key': JSONBIN_API_KEY
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Fehler beim Laden');
+                return res.json();
+            })
+            .then(data => {
+                let records = null;
+                if (data && data.record) {
+                    records = data.record;
+                }
+                if (records) {
+                    mediaDatabase = records;
+                    localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
+                    renderList();
+                    alert('Erfolgreich aus der Cloud geladen! ☁️');
+                } else {
+                    alert('Die Cloud-Bin ist leer.');
+                }
+            })
+            .catch(err => alert('Cloud-Laden fehlgeschlagen.'));
         }
 
         function switchTab(tabName, element) {
@@ -783,6 +836,7 @@
             }
         }
 
+        // App startet zu 100% lokal und stabil
         renderList();
     </script>
 </body>
