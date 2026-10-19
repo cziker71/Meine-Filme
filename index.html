@@ -29,7 +29,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             display: flex;
             align-items: center;
@@ -55,17 +54,8 @@
             box-shadow: 0 4px 12px rgba(138, 92, 246, 0.3);
         }
 
-        .header h1 {
-            font-size: 1.4rem;
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin: 2px 0 0 0;
-        }
+        .header h1 { font-size: 1.4rem; margin: 0; font-weight: 700; }
+        .header p { font-size: 0.85rem; color: var(--text-secondary); margin: 2px 0 0 0; }
 
         .header-actions {
             display: flex;
@@ -106,12 +96,7 @@
             margin-left: 4px;
         }
 
-        /* Gimmicks */
-        .gimmick-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
+        .gimmick-bar { display: flex; gap: 8px; margin-bottom: 16px; }
 
         .gimmick-btn {
             flex: 1;
@@ -128,7 +113,6 @@
             gap: 6px;
         }
 
-        /* Such- & Hinzufügen-Box */
         .add-card {
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -146,10 +130,7 @@
             text-transform: uppercase;
         }
 
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 6px;
-        }
+        .input-wrapper { position: relative; margin-bottom: 6px; }
 
         .add-input {
             width: 100%;
@@ -175,17 +156,11 @@
             font-size: 16px;
         }
 
-        .add-hint {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            margin: 0;
-        }
+        .add-hint { font-size: 0.78rem; color: var(--text-secondary); margin: 0; }
 
         .search-results-popup {
             position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
+            top: 100%; left: 0; right: 0;
             background-color: var(--surface-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
@@ -209,26 +184,15 @@
         .search-result-item:hover { background-color: var(--surface-color); }
 
         .search-result-poster {
-            width: 32px;
-            height: 46px;
+            width: 32px; height: 46px;
             border-radius: 4px;
             object-fit: cover;
             background-color: #262c36;
         }
 
-        .search-result-info h5 {
-            margin: 0 0 2px 0;
-            font-size: 0.88rem;
-            color: var(--text-color);
-        }
+        .search-result-info h5 { margin: 0 0 2px 0; font-size: 0.88rem; color: var(--text-color); }
+        .search-result-info p { margin: 0; font-size: 0.75rem; color: var(--text-secondary); }
 
-        .search-result-info p {
-            margin: 0;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 20px;
@@ -255,10 +219,8 @@
         .tab.active::after {
             content: '';
             position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
+            bottom: -1px; left: 0;
+            width: 100%; height: 2px;
             background-color: var(--primary-color);
         }
 
@@ -270,17 +232,9 @@
             border-radius: 10px;
         }
 
-        .tab.active .tab-badge {
-            background-color: var(--primary-color);
-            color: white;
-        }
+        .tab.active .tab-badge { background-color: var(--primary-color); color: white; }
 
-        /* Suchleiste */
-        .filter-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
+        .filter-row { display: flex; gap: 8px; margin-bottom: 16px; }
 
         .list-search {
             flex: 1;
@@ -297,12 +251,7 @@
             background-position: 12px center;
         }
 
-        /* Karten */
-        .grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .grid { display: flex; flex-direction: column; gap: 12px; }
 
         .card {
             background-color: var(--surface-card);
@@ -314,40 +263,18 @@
             gap: 10px;
         }
 
-        .card-header-line {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-        }
+        .card-header-line { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .card-main-info { display: flex; align-items: flex-start; gap: 12px; overflow: hidden; flex: 1; }
 
-        .card-main-info {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            overflow: hidden;
-            flex: 1;
-        }
-
-        /* Checkbox */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            margin-top: 4px;
-        }
-
+        .checkbox-container { display: flex; align-items: center; cursor: pointer; margin-top: 4px; }
         .checkbox-container input { display: none; }
 
         .custom-checkbox {
-            width: 22px;
-            height: 22px;
+            width: 22px; height: 22px;
             border: 2px solid var(--border-color);
             border-radius: 6px;
             background-color: var(--surface-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .checkbox-container input:checked + .custom-checkbox {
@@ -356,128 +283,60 @@
         }
 
         .checkbox-container input:checked + .custom-checkbox::after {
-            content: '✓';
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
+            content: '✓'; color: white; font-size: 13px; font-weight: bold;
         }
 
         .card-poster-img {
-            width: 52px;
-            height: 74px;
+            width: 52px; height: 74px;
             border-radius: 6px;
             object-fit: cover;
             background-color: #262c36;
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 22px;
         }
 
-        .card-text-details h4 {
-            margin: 0 0 2px 0;
-            font-size: 1rem;
-            color: var(--text-color);
-            line-height: 1.25;
-        }
-
-        .card-meta {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-
-        .card-actors {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
+        .card-text-details h4 { margin: 0 0 2px 0; font-size: 1rem; color: var(--text-color); line-height: 1.25; }
+        .card-meta { font-size: 0.8rem; color: var(--primary-color); margin-bottom: 4px; font-weight: 500; }
+        .card-actors { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
         .card-overview {
-            font-size: 0.82rem;
-            color: #c9d1d9;
-            margin-top: 4px;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            font-size: 0.82rem; color: #c9d1d9; margin-top: 4px; line-height: 1.35;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        .card-actions {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            flex-shrink: 0;
-        }
-
+        .card-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
         .action-icon-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 15px;
-            padding: 6px;
-            border-radius: 6px;
+            background: none; border: none; color: var(--text-secondary);
+            cursor: pointer; font-size: 15px; padding: 6px; border-radius: 6px;
         }
         .action-icon-btn:hover { color: var(--text-color); background-color: rgba(255,255,255,0.05); }
 
-        /* Modal */
         .modal {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.75);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            box-sizing: border-box;
-            z-index: 100;
+            justify-content: center; align-items: center;
+            padding: 16px; box-sizing: border-box; z-index: 100;
         }
 
         .modal-content {
             background-color: var(--surface-card);
             border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 85vh;
-            overflow-y: auto;
+            padding: 20px; border-radius: 16px;
+            width: 100%; max-width: 400px;
+            display: flex; flex-direction: column; gap: 12px;
+            max-height: 85vh; overflow-y: auto;
         }
 
         .modal-content input, .modal-content select, .modal-content textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
+            width: 100%; padding: 10px; border-radius: 8px;
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
-            color: var(--text-color);
-            box-sizing: border-box;
-            outline: none;
-            font-family: inherit;
+            color: var(--text-color); box-sizing: border-box; outline: none; font-family: inherit;
         }
 
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .modal-buttons button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+        .modal-buttons button { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
         .btn-cancel { background-color: var(--surface-color); color: var(--text-secondary); }
         .btn-save { background-color: var(--primary-color); color: white; }
 
@@ -487,17 +346,16 @@
 <body>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-left">
                 <div class="app-icon">🎬</div>
                 <div>
                     <h1>CineTracker</h1>
-                    <p>Meine Film-Sammlung</p>
+                    <p>Meine Film-Sammlung (Cloud-Sync aktiv)</p>
                 </div>
             </div>
             <div class="header-actions">
-                <button class="icon-btn" onclick="syncWithJsonBin()" title="Mit JSONbin synchronisieren">☁️</button>
+                <button class="icon-btn" onclick="syncFromCloud()" title="Aus Cloud laden">☁️📥</button>
                 <button class="icon-btn" onclick="exportData()" title="Backup Exportieren">📥</button>
                 <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Backup Importieren">📤</button>
                 <button class="add-btn-main" onclick="openModal()" title="Manuell hinzufügen">+</button>
@@ -505,7 +363,6 @@
             </div>
         </div>
 
-        <!-- Suchen & Hinzufügen -->
         <div class="add-card">
             <h3>NEUEN FILM SUCHEN & HINZUFÜGEN</h3>
             <div class="input-wrapper">
@@ -516,13 +373,11 @@
             <div id="searchResultsPopup" class="search-results-popup"></div>
         </div>
 
-        <!-- Gimmicks -->
         <div class="gimmick-bar">
             <button class="gimmick-btn" onclick="pickRandomMovie()">🎲 Was gucken?</button>
             <button class="gimmick-btn" onclick="shareList()">📋 Liste kopieren</button>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" onclick="switchTab('watchlist', this)">
                 Möchte ich sehen <span class="tab-badge" id="badgeWatchlist">0</span>
@@ -532,16 +387,13 @@
             </button>
         </div>
 
-        <!-- Suchleiste -->
         <div class="filter-row">
             <input type="text" id="listSearch" class="list-search" placeholder="In dieser Liste suchen (Titel, Darsteller...)..." onkeyup="renderList()">
         </div>
 
-        <!-- Medien Liste -->
         <div id="mediaGrid" class="grid"></div>
     </div>
 
-    <!-- Modal für Filminfos (ℹ️) -->
     <div id="infoModal" class="modal">
         <div class="modal-content">
             <div style="display: flex; gap: 14px; align-items: flex-start;">
@@ -565,7 +417,6 @@
         </div>
     </div>
 
-    <!-- Modal zum Bearbeiten & Hinzufügen -->
     <div id="addModal" class="modal">
         <div class="modal-content">
             <h3 id="modalTitleText" style="margin: 0;">Neuen Eintrag hinzufügen</h3>
@@ -592,11 +443,9 @@
         let searchTimeout = null;
         const TMDB_API_KEY = 'ea010c0eb57a6714faf34f54b6007efc';
 
-        // =========================================================================
-        // TRAGE HIER NUR DEINEN JSONBIN MASTER KEY EIN (z.B. $2a$10$...):
-        // =========================================================================
+        // Deine JSONbin Zugangsdaten
         const JSONBIN_API_KEY = '$2a$10$gTEuNP03Ci.mllC3fwupCO0oA2neSflvlIzxb7fgWXekcrRhg.7Im';
-        let jsonBinId = || '6ad643fbffd5d16053795506';
+        const JSONBIN_ID = '6ad643fbffd5d16053795506';
 
         let mediaDatabase = JSON.parse(localStorage.getItem('cinetrackerData')) || [
             { 
@@ -614,100 +463,39 @@
 
         function saveData() {
             localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
-            if (JSONBIN_API_KEY && JSONBIN_API_KEY !== 'HIER_DEIN_JSONBIN_MASTER_KEY_EINTRAGEN' && jsonBinId) {
-                pushToJsonBin();
-            }
+            syncToCloud();
         }
 
-        function pushToJsonBin() {
-            if (!jsonBinId) return;
-            fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}`, {
+        function syncToCloud() {
+            if (!JSONBIN_API_KEY || !JSONBIN_ID) return;
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Master-Key': JSONBIN_API_KEY
                 },
                 body: JSON.stringify(mediaDatabase)
-            }).catch(() => {});
+            }).catch(err => console.log('Cloud-Sync Fehler beim Speichern:', err));
         }
 
-        function syncWithJsonBin() {
-            if (!JSONBIN_API_KEY || JSONBIN_API_KEY === 'HIER_DEIN_JSONBIN_MASTER_KEY_EINTRAGEN') {
-                alert("Bitte trage zuerst deinen JSONbin Master Key oben im Code ein!");
-                return;
-            }
-
-            // Wenn noch keine Bin ID gespeichert ist, fragen wir kurz oder erstellen automatisch eine neue
-            if (!jsonBinId) {
-                const manualId = prompt("Keine Bin ID gefunden.\n\nFalls du schon eine hast, gib sie hier ein. Klicke auf Abbrechen, damit die App automatisch eine neue für dich erstellt:");
-                if (manualId && manualId.trim()) {
-                    jsonBinId = manualId.trim();
-                    localStorage.setItem('cinetracker_jsonbin_id', jsonBinId);
-                    syncWithJsonBin();
-                    return;
-                } else {
-                    // Automatisch eine neue Bin im Account anlegen
-                    fetch('https://api.jsonbin.io/v3/b', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Master-Key': JSONBIN_API_KEY,
-                            'X-Bin-Private': 'true'
-                        },
-                        body: JSON.stringify(mediaDatabase)
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.metadata && data.metadata.id) {
-                            jsonBinId = data.metadata.id;
-                            localStorage.setItem('cinetracker_jsonbin_id', jsonBinId);
-                            alert(`Cloud-Bin erfolgreich automatisch erstellt!\n\nDeine Bin ID lautet:\n${jsonBinId}\n\n(Notiere dir diese ID. Auf deinem anderen Gerät kannst du sie eingeben, wenn danach gefragt wird, damit beide Geräte dieselbe Liste nutzen).`);
-                            renderList();
-                        } else {
-                            alert("Fehler beim Erstellen der Bin. Bitte prüfe deinen Master Key.");
-                        }
-                    })
-                    .catch(() => alert("Netzwerkfehler beim Erstellen der Bin."));
-                    return;
-                }
-            }
-
-            // Daten von JSONbin laden
-            fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}/latest`, {
+        function syncFromCloud() {
+            if (!JSONBIN_API_KEY || !JSONBIN_ID) return;
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
                 headers: {
                     'X-Master-Key': JSONBIN_API_KEY
                 }
             })
             .then(res => res.json())
             .then(data => {
-                if (data.record) {
+                if (data && data.record) {
                     mediaDatabase = data.record;
                     localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
                     renderList();
-                    alert("Erfolgreich mit JSONbin synchronisiert!");
-                } else {
-                    alert("Keine Daten in dieser Bin gefunden.");
+                    alert('Erfolgreich aus der Cloud synchronisiert!');
                 }
             })
-            .catch(() => alert("Fehler beim Laden. Überprüfe deinen Master Key und die Bin ID."));
+            .catch(err => alert('Fehler beim Laden aus der Cloud.'));
         }
-
-        // Beim Start der App automatisch im Hintergrund die neuesten Daten laden
-        window.addEventListener('DOMContentLoaded', () => {
-            if (JSONBIN_API_KEY && JSONBIN_API_KEY !== 'HIER_DEIN_JSONBIN_MASTER_KEY_EINTRAGEN' && jsonBinId) {
-                fetch(`https://api.jsonbin.io/v3/b/${jsonBinId}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.record) {
-                        mediaDatabase = data.record;
-                        localStorage.setItem('cinetrackerData', JSON.stringify(mediaDatabase));
-                        renderList();
-                    }
-                }).catch(() => {});
-            }
-        });
 
         function switchTab(tabName, element) {
             currentTab = tabName;
@@ -977,7 +765,7 @@
                             <div class="card-text-details">
                                 <h4>${item.title}</h4>
                                 <div class="card-meta">${item.year} &bull; ${item.genre}</div>
-                                .<div class="card-actors">👤 ${item.cast || 'Unbekannt'}</div>
+                                <div class="card-actors">👤 ${item.cast || 'Unbekannt'}</div>
                             </div>
                         </div>
                         <div class="card-actions">
@@ -1032,7 +820,8 @@
             }
         }
 
-        renderList();
+        // Beim Start der App einmal frisch aus der Cloud holen, damit PC und Handy synchron sind
+        syncFromCloud();
     </script>
 </body>
 </html>
